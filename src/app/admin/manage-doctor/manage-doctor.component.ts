@@ -16,9 +16,7 @@ declare var $: any
   styleUrls: ['./manage-doctor.component.css']
 })
 export class ManageDoctorComponent {
-editDoctor(_t74: any) {
-throw new Error('Method not implemented.');
-}
+
   dataLoading: boolean = false
   DoctorList: any = []
   Doctor: any = {}
@@ -60,6 +58,7 @@ throw new Error('Method not implemented.');
     this.StaffLogin = this.localService.getEmployeeDetail();
     this.validiateMenu();
     this.getDoctorList();
+    this.getDepartmentList();
   }
   resetForm() {
     this.Doctor = {};
@@ -95,7 +94,7 @@ throw new Error('Method not implemented.');
     }
 
     this.Doctor.JoinDate = this.loadDataService.loadDateTime(this.Doctor.JoinDate);
-    this.Doctor.DOB = this.loadDataService.loadDateTime(this.Doctor.DOB);
+    this.Doctor.DateOfBirth = this.loadDataService.loadDateTime(this.Doctor.DateOfBirth);
     this.Doctor.UpdatedBy = this.StaffLogin.StaffLoginId;
     this.Doctor.CreatedBy = this.StaffLogin.StaffLoginId;
     var obj: RequestModel = {
@@ -112,14 +111,14 @@ throw new Error('Method not implemented.');
           this.toastr.success("Doctor added successfully")
         }
         $('#staticBackdrop').modal('hide')
-        this.resetForm()
-        // this.DoctorList()
+        this.resetForm();
+        this.getDoctorList();
       } else {
         this.toastr.error(response.Message)
         this.dataLoading = false;
         this.Doctor.JoinDate = new Date(this.Doctor.JoinDate);
-        if (this.Doctor.DOB)
-          this.Doctor.DOB = new Date(this.Doctor.DOB);
+        if (this.Doctor.DateOfBirth)
+          this.Doctor.DateOfBirth = new Date(this.Doctor.DateOfBirth);
       }
     }, (err => {
       this.toastr.error("Error occured while submitting data")
@@ -135,7 +134,6 @@ throw new Error('Method not implemented.');
       let response = r1 as any
       if (response.Message == ConstantData.SuccessMessage) {
         this.DoctorList = response.DoctorList;
-        console.log(this.DoctorList)
       } else {
         this.toastr.error(response.Message)
       }
@@ -168,14 +166,36 @@ throw new Error('Method not implemented.');
     }
   }
 
-  editDepartment(obj: any) {
-    this.resetForm()
-    this.Doctor = obj
+
+
+
+  getDepartmentList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({ })).toString()
+    }
+    this.dataLoading = true
+    this.service.getDepartmentList(obj).subscribe(r1 => {
+      let response = r1 as any
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.DepartmentList = response.DepartmentList;
+      } else {
+        this.toastr.error(response.Message)
+      }
+      this.dataLoading = false
+    }, (err => {
+      this.toastr.error("Error while fetching records")
+      this.dataLoading = false;
+    }))
   }
 
 
-
-
+    editDoctor(obj: any) {
+    this.resetForm()
+    this.Doctor = obj;
+    this.Doctor.JoinDate = new Date(obj.JoinDate);
+    if (this.Doctor.DateOofBirth)
+      this.Doctor.DateOfBirth = new Date(obj.DateOfBirth);
+  }
 
 
 }

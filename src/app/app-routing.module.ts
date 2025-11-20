@@ -19,6 +19,7 @@ import { ChangePasswordComponent } from './admin/change-password/change-password
 import { CompanyComponent } from './admin/company/company.component';
 import { FormComponent } from './admin/form/form.component';
 import { ManageDoctorComponent } from './admin/manage-doctor/manage-doctor.component';
+import { ManagePatientComponent } from './admin/manage-patient/manage-patient.component';
 const routes: Routes = [
   { path: '', redirectTo: "/admin-login", pathMatch: 'full' },
   { path: 'admin-login', component: AdminLoginComponent },
@@ -41,6 +42,8 @@ const routes: Routes = [
       { path: 'company', component: CompanyComponent },
       { path: 'form', component: FormComponent},
       { path: 'manage-doctor', component: ManageDoctorComponent},
+      { path: 'manage-patient', component: ManagePatientComponent},
+
     ]
   },
   { path: 'page-not-found', component: PageNotFoundComponent },

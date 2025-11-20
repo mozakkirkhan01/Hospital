@@ -39,6 +39,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } f
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { FormComponent } from './admin/form/form.component';
 import { ManageDoctorComponent } from './admin/manage-doctor/manage-doctor.component';
+import { ManagePatientComponent } from './admin/manage-patient/manage-patient.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { ManageDoctorComponent } from './admin/manage-doctor/manage-doctor.compo
     CompanyComponent,
     FormComponent,
     ManageDoctorComponent,
+    ManagePatientComponent,
   ],
   imports: [
     BrowserModule,
