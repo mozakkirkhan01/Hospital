@@ -41,22 +41,17 @@
                             <tr>
                                 <th>S.No</th>
                                 <th (click)="sort('DoctorName')">Doctor Name</th>
-                                <th (click)="sort('DoctorCode')">Doctor Code</th>
-                                <th (click)="sort('DesignationName')">Designation</th>
-                                <th (click)="sort('DoctorType')">Doctor Type</th>
-                                <th (click)="sort('FatherName')">Father's Name</th>
-                                <th (click)="sort('MobileNo')">Mobile No</th>
-                                <th (click)="sort('AlternateNo')">Alternate No</th>
-                                <th (click)="sort('Email')">Email</th>
-                                <th (click)="sort('DOB')">DOB</th>
-                                <th (click)="sort('Gender')">Gender</th>
-                                <th (click)="sort('Qualification')">Qualification</th>
-                                <th (click)="sort('FullAddress')">Full Address</th>
-                                <th (click)="sort('JoinDate')">Join Date</th>
                                 <th (click)="sort('DepartmentName')">Department</th>
-                                <th (click)="sort('Status')">Status</th>
+                                <th (click)="sort('DateOfBirth')">Date Of Birth</th>
+                                <th (click)="sort('Gender')">Gender</th>
+                                <th (click)="sort('MobileNo')">Mobile No</th>
+                                <th (click)="sort('ConsultFee')">Consult Fee</th>
+                                <th (click)="sort('JoinDate')">Join Date</th>
+                                <th (click)="sort('Email')">Email</th>
+                                <th (click)="sort('Qualification')">Qualification</th>
                                 <th *ngIf="action.CanEdit">Edit</th>
                                 <th *ngIf="action.CanDelete">Delete</th>
+                                <th (click)="sort('Status')">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,28 +59,17 @@
                                 *ngFor="let item of DoctorList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
                                 <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
                                 <td>{{item.DoctorName}}</td>
-                                <td>{{item.DoctorCode}}</td>
-                                <td>{{item.DesignationName}}</td>
-                                <td>{{AllDoctorTypeList[item.DoctorType]|enumCase}}</td>
-                                <td>{{item.FatherName}}</td>
-                                <td>{{item.MobileNo}}</td>
-                                <td>{{item.AlternateNo}}</td>
-                                <td>{{item.Email}}</td>
-                                <td style="white-space:nowrap">{{item.DOB | date: "dd-MM-yy"}}</td>
-                                <td>{{AllGenderList[item.Gender]}}</td>
-                                <td>{{item.Qualification}}</td>
-                                <td>{{item.FullAddress}}</td>
-                                <td style="white-space:nowrap">{{item.JoinDate | date: "dd-MM-yy"}}</td>
                                 <td>{{item.DepartmentName}}</td>
-                                <td>
-                                    <span class="p-1"
-                                        [ngClass]="item.Status == 1 ? 'badge text-bg-success':'badge text-bg-danger'">
-                                        {{AllStatusList[item.Status]}}
-                                    </span>
-                                </td>
+                                <td style="white-space:nowrap">{{item.DateOfBirth | date: "dd-MM-yy"}}</td>
+                                <td>{{AllGenderList[item.Gender]}}</td>
+                                <td>{{item.MobileNo}}</td>
+                                <td>{{item.ConsultFee}}</td>
+                                <td style="white-space:nowrap">{{item.JoinDate | date: "dd-MM-yy"}}</td>
+                                <td>{{item.Email}}</td>
+                                <td>{{item.Qualification}}</td>
                                 <td *ngIf="action.CanEdit">
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#staticBackdrop" (click)="editDoctor(item)">
+                                    data-bs-target="#staticBackdrop" (click)="editDoctor(item)">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </td>
@@ -93,6 +77,12 @@
                                     <button class="btn btn-sm btn-danger" (click)="deleteDoctor(item)">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
+                                </td>
+                                <td>
+                                    <span class="p-1"
+                                        [ngClass]="item.Status == 1 ? 'badge text-bg-success':'badge text-bg-danger'">
+                                        {{AllStatusList[item.Status]}}
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
