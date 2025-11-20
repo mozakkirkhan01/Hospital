@@ -37,7 +37,11 @@ export class AppService {
     });
   }
 
-  // Floor
+  // Pateint
+  savePatient(obj:any) {
+    return this.http.post(this.apiUrl + 'Patient/savePatient',obj,
+      {headers: this.headers,});
+  }
 
 
 
