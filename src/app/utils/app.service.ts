@@ -43,6 +43,16 @@ export class AppService {
       {headers: this.headers,});
   }
 
+  getPatientList(obj:any) {
+    return this.http.post(this.apiUrl + 'Patient/PatientList',obj,
+      {headers: this.headers,});
+  }
+      deletePatient(obj: any) {
+    return this.http.post(this.apiUrl + 'Patient/deletePatient', obj, {
+      headers: this.headers,
+    });
+  }
+
 
 
   //Doctor

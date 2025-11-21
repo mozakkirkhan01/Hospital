@@ -10,6 +10,10 @@ export enum PaymentStatus {
     Paid = 1,
     Due = 2
 }
+export enum MaritalStatus {
+    Married = 1,
+    UnMarried = 2
+}
 export enum CouponStatus {
     NotGenerated = 5,
     Generated = 1,

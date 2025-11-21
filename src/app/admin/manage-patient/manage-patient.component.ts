@@ -5,7 +5,7 @@ import { AppService } from '../../utils/app.service';
 import { ConstantData } from '../../utils/constant-data';
 import { LoadDataService } from '../../utils/load-data.service';
 import { LocalService } from '../../utils/local.service';
-import { Gender, DocType, Status } from '../../utils/enum';
+import { Gender, DocType, Status, BloodGroup, MaritalStatus } from '../../utils/enum';
 import { ActionModel, RequestModel, StaffLoginModel } from '../../utils/interface';
 import { Router } from '@angular/router';
 
@@ -31,6 +31,8 @@ export class ManagePatientComponent {
   StaffLogin: StaffLoginModel = {} as StaffLoginModel;
   StatusList = this.loadDataService.GetEnumList(Status);
   GenderList = this.loadDataService.GetEnumList(Gender);
+  BloodGroupList = this.loadDataService.GetEnumList(BloodGroup);
+  MaritalStatusList = this.loadDataService.GetEnumList(MaritalStatus);
   PatientTypeList = this.loadDataService.GetEnumList(DocType);
   AllStatusList = Status;
   AllGenderList = Gender;
@@ -56,7 +58,7 @@ export class ManagePatientComponent {
   ngOnInit(): void {
     this.StaffLogin = this.localService.getEmployeeDetail();
     this.validiateMenu();
-    // this.getPatientList();
+    this.getPatientList();
   }
   resetForm() {
     this.Patient = {};
@@ -125,48 +127,56 @@ export class ManagePatientComponent {
       this.dataLoading = false;
     }))
   }
-//   getPatientList() {
-//     var obj: RequestModel = {
-//       request: this.localService.encrypt(JSON.stringify({ })).toString()
-//     }
-//     this.dataLoading = true
-//     this.service.getPatientList(obj).subscribe(r1 => {
-//       let response = r1 as any
-//       if (response.Message == ConstantData.SuccessMessage) {
-//         this.PatientList = response.PatientList;
-//       } else {
-//         this.toastr.error(response.Message)
-//       }
-//       this.dataLoading = false
-//     }, (err => {
-//       this.toastr.error("Error while fetching records")
-//       this.dataLoading = false;
-//     }))
-//   }
+  getPatientList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({ })).toString()
+    }
+    this.dataLoading = true
+    this.service.getPatientList(obj).subscribe(r1 => {
+      let response = r1 as any
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.PatientList = response.PatientList;
+      } else {
+        this.toastr.error(response.Message)
+      }
+      this.dataLoading = false
+    }, (err => {
+      this.toastr.error("Error while fetching records")
+      this.dataLoading = false;
+    }))
+  }
 
-//     deletePatient(obj: any) {
-//     if (confirm("Are your sure you want to delete this recored")) {
-//       var request: RequestModel = {
-//         request: this.localService.encrypt(JSON.stringify(obj)).toString()
-//       }
-//       this.dataLoading = true
-//       this.service.deletePatient(request).subscribe(r1 => {
-//         let response = r1 as any
-//         if (response.Message == ConstantData.SuccessMessage) {
-//           this.toastr.success("Record Deleted successfully")
-//           this.getPatientList()
-//         } else {
-//           this.toastr.error(response.Message)
-//           this.dataLoading = false
-//         }
-//       }, (err => {
-//         this.toastr.error("Error occured while deleteing the recored")
-//         this.dataLoading = false
-//       }))
-//     }
-//   }
+    deletePatient(obj: any) {
+    if (confirm("Are your sure you want to delete this recored")) {
+      var request: RequestModel = {
+        request: this.localService.encrypt(JSON.stringify(obj)).toString()
+      }
+      this.dataLoading = true
+      this.service.deletePatient(request).subscribe(r1 => {
+        let response = r1 as any
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.toastr.success("Record Deleted successfully")
+          this.getPatientList()
+        } else {
+          this.toastr.error(response.Message)
+          this.dataLoading = false
+        }
+      }, (err => {
+        this.toastr.error("Error occured while deleteing the recored")
+        this.dataLoading = false
+      }))
+    }
+  }
 
 
+
+    editPatient(obj: any) {
+    this.resetForm()
+    this.Patient = obj;
+    this.Patient.JoinDate = new Date(obj.JoinDate);
+    if (this.Patient.DateOofBirth)
+      this.Patient.DateOfBirth = new Date(obj.DateOfBirth);
+  }
 
 
 
