@@ -10,7 +10,7 @@
                 <li class="breadcrumb-item">{{action.ParentMenuTitle}}</li>
                 <li class="breadcrumb-item active">{{action.MenuTitle}}</li>
               </ol>
-            </nav>
+            </nav>AllGenderList
           </div>
         <div class="col-sm-4">
          
@@ -41,7 +41,10 @@
                             <tr>
                                 <th>S.No</th>
                                 <th (click)="sort('PatientName')">Patient Name</th>
+                                <th (click)="sort('UHIDNo')">Patient UHID Number</th>
                                 <th (click)="sort('Gender')">Gender</th>
+                                <th (click)="sort('BloodGroup')">Blood Group</th>
+                                <th (click)="sort('MaritalStatus')"> Marital Status</th>
                                 <th (click)="sort('DateOfBirth')">Date Of Birth</th>
                                 <th (click)="sort('Age')">Age</th>
                                 <th (click)="sort('MobileNo')">Mobile No</th>
@@ -59,7 +62,10 @@
                                 *ngFor="let item of PatientList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
                                 <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
                                 <td>{{item.PatientName}}</td>
+                                <td>{{item.UHIDNo}}</td>
                                 <td>{{AllGenderList[item.Gender]}}</td>
+                                <td>{{AllBloodGroupList[item.BloodGroup]}}</td>
+                                <td>{{AllMaritalStatusList[item.MaritalStatus]}}</td>
                                 <td style="white-space:nowrap">{{item.DateOfBirth | date: "dd-MM-yy"}}</td>
                                 <td>{{item.Age}}</td>
                                 <td>{{item.MobileNo}}</td>
@@ -126,6 +132,16 @@
                                         Patient name is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                    <mat-label>Patient UHID NUMBER</mat-label>
+                                    <input matInput #UHIDNo="ngModel" name="UHIDNo" [(ngModel)]="Patient.UHIDNo"
+                                        required autofocus>
+                                    <mat-error
+                                        *ngIf="(UHIDNo.dirty  || UHIDNo.touched) || (UHIDNo.invalid && isSubmitted)">
+                                        Patient UHID  is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
                                 
                                 
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
@@ -136,6 +152,29 @@
                                     </mat-select>
                                     <mat-error>
                                         Gender is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <!-- BLOOD GROUP -->
+                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                    <mat-label>Blood Group</mat-label>
+                                    <mat-select #BloodGroup="ngModel" name="BloodGroup" [(ngModel)]="Patient.BloodGroup">
+                                        <mat-option [value]="BloodGroup.Key"
+                                            *ngFor="let BloodGroup of BloodGroupList">{{BloodGroup.Value}}</mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Blood Group is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                                <!-- MARITAL STATUS  -->
+                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                    <mat-label> Marital Status</mat-label>
+                                    <mat-select #MaritalStatus="ngModel" name="MaritalStatus" [(ngModel)]="Patient.MaritalStatus">
+                                        <mat-option [value]="MaritalStatus.Key"
+                                            *ngFor="let MaritalStatus of MaritalStatusList">{{MaritalStatus.Value}}</mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Marital Status  is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>
                                 
