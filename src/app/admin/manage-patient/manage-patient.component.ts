@@ -36,6 +36,8 @@ export class ManagePatientComponent {
   PatientTypeList = this.loadDataService.GetEnumList(DocType);
   AllStatusList = Status;
   AllGenderList = Gender;
+  AllMaritalStatusList = MaritalStatus;
+  AllBloodGroupList = BloodGroup;
   AllPatientTypeList = DocType;
 
   sort(key: any) {
@@ -114,7 +116,7 @@ export class ManagePatientComponent {
         $('#staticBackdrop').modal('hide')
         this.dataLoading = false;
         this.resetForm();
-        // this.getPatientList();
+        this.getPatientList();
       } else {
         this.toastr.error(response.Message)
         this.dataLoading = false;
