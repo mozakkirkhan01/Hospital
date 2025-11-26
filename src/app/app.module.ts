@@ -40,6 +40,7 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
 import { FormComponent } from './admin/form/form.component';
 import { ManageDoctorComponent } from './admin/manage-doctor/manage-doctor.component';
 import { ManagePatientComponent } from './admin/manage-patient/manage-patient.component';
+import { ServiceChargeComponent } from './admin/service-charge/service-charge.component';
 
 
 @NgModule({
@@ -70,6 +71,7 @@ import { ManagePatientComponent } from './admin/manage-patient/manage-patient.co
     FormComponent,
     ManageDoctorComponent,
     ManagePatientComponent,
+    ServiceChargeComponent,
   ],
   imports: [
     BrowserModule,
