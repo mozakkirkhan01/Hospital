@@ -1,0 +1,88 @@
+<p>manage-servicecategory works!</p>
+<app-progress *ngIf="dataLoading"></app-progress>
+<main id="main" class="main" *ngIf="action.ResponseReceived">
+    <div class="row">
+        <div class="pagetitle dashboard col-sm-8">
+            <h1>{{action.MenuTitle}}</h1>
+            <nav>
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">{{action.ParentMenuTitle}}</li>
+                <li class="breadcrumb-item active">{{action.MenuTitle}}</li>
+              </ol>
+            </nav>
+          </div>
+        <div class="col-sm-4">
+         
+             <button mat-raised-button color="primary" *ngIf="action.CanCreate" class="float-right"
+                data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="resetForm()">New
+                servicecategory</button>
+        </div>
+    </div>
+
+    <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade modal-lg" id="staticBackdrop"
+        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">{{servicecategory.servicecategoryId > 0 ? 'Update':'New'}}
+                        servicecategory
+                    </h1>
+                    <button type=" button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        ></button>
+                    <!-- <button type=" button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        (click)="resetForm()"></button> -->
+                </div>
+                <div class="modal-body">
+                    <form #formservicecategory="ngForm" class="d-flex justify-content-evenly flex-wrap">
+                        <div class="container">
+
+                            <div class="row">
+
+                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                    <mat-label>servicecategory Name</mat-label>
+                                    <input matInput #servicecategoryName="ngModel" name="servicecategoryName" [(ngModel)]="servicecategory.servicecategoryName"
+                                        required autofocus>
+
+                                    <mat-error
+                                        *ngIf="(servicecategoryName.dirty  || servicecategoryName.touched) || (servicecategoryName.invalid && isSubmitted)">
+                                        servicecategory name is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+
+
+
+                            
+
+                                <!--status-->
+                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                    <mat-label>Status</mat-label>
+                                    <mat-select #Status="ngModel" name="Status" [(ngModel)]="servicecategory.Status" required>
+                                        <mat-option [value]="status.Key"
+                                            *ngFor="let status of StatusList">{{status.Value}}</mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="(Status.dirty  || Status.touched) || (Status.invalid && isSubmitted)">
+                                        Status is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer mt-2">
+
+                     <button type="button" mat-raised-button color="warn" class="me-2" data-bs-dismiss="modal"
+                        (click)="resetForm()">Cancel</button>
+
+                     <button mat-raised-button color="primary" (click)="saveServiceCategory()">{{servicecategory.servicecategoryId >
+                        0 ? 'Update':'Submit'}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>

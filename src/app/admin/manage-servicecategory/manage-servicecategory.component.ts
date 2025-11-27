@@ -1,0 +1,121 @@
+import { Component, ViewChild, } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { AppService } from '../../utils/app.service';
+import { ConstantData } from '../../utils/constant-data';
+import { LoadDataService } from '../../utils/load-data.service';
+import { LocalService } from '../../utils/local.service';
+import { Gender, DocType, Status } from '../../utils/enum';
+import { ActionModel, RequestModel, StaffLoginModel } from '../../utils/interface';
+import { Router } from '@angular/router';
+
+declare var $: any
+@Component({
+  selector: 'app-manage-servicecategory',
+  templateUrl: './manage-servicecategory.component.html',
+  styleUrls: ['./manage-servicecategory.component.css']
+})
+export class ManageServicecategoryComponent {
+
+  dataLoading: boolean = false
+  servicecategoryList: any = []
+  servicecategory: any = {}
+  isSubmitted = false
+  DepartmentList: any = []
+  PageSize = ConstantData.PageSizes;
+  p: number = 1;
+  Search: string = '';
+  reverse: boolean = false;
+  sortKey: string = '';
+  itemPerPage: number = this.PageSize[0];
+  action: ActionModel = {} as ActionModel;
+  StaffLogin: StaffLoginModel = {} as StaffLoginModel;
+  StatusList = this.loadDataService.GetEnumList(Status);
+  AllStatusList = Status;
+
+  sort(key: any) {
+    this.sortKey = key;
+    this.reverse = !this.reverse;
+  }
+
+  onTableDataChange(p: any) {
+    this.p = p
+  }
+
+  constructor(
+    private service: AppService,
+    private toastr: ToastrService,
+    private loadDataService: LoadDataService,
+    private localService: LocalService,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    this.StaffLogin = this.localService.getEmployeeDetail();
+    this.validiateMenu();
+    // this.getservicecategoryList();
+  }
+  resetForm() {
+    this.servicecategory = {};
+    this.servicecategory.Status = 1
+    if (this.formservicecategory) {
+      this.formservicecategory.control.markAsPristine();
+      this.formservicecategory.control.markAsUntouched();
+    }
+    this.isSubmitted = false
+  }
+  validiateMenu() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({ Url: this.router.url,StaffLoginId:this.StaffLogin.StaffLoginId })).toString()
+    }
+    this.dataLoading = true
+    this.service.validiateMenu(obj).subscribe((response: any) => {
+      this.action = this.loadDataService.validiateMenu(response, this.toastr, this.router)
+      this.dataLoading = false;
+    }, (err => {
+      this.toastr.error("Error while fetching records")
+      this.dataLoading = false;
+    }))
+  }
+
+
+    @ViewChild('formservicecategory') formservicecategory: NgForm;
+    saveServiceCategory() {
+      this.isSubmitted = true;
+      this.formservicecategory.control.markAllAsTouched();
+      if (this.formservicecategory.invalid) {
+        this.toastr.error("Fill all the required fields !!")
+        return
+      }
+  
+      var obj: RequestModel = {
+        request: this.localService.encrypt(JSON.stringify(this.servicecategory)).toString()
+      }
+      this.dataLoading = true;
+      this.service.saveServiceCategory(obj).subscribe(r1 => {
+        let response = r1 as any
+        if (response.Message == ConstantData.SuccessMessage) {
+          if (this.servicecategory.servicecategoryId > 0) {
+            this.toastr.success("servicecategory detail updated successfully")
+  
+          } else {
+            this.toastr.success("servicecategory added successfully")
+          }
+          $('#staticBackdrop').modal('hide')
+          this.resetForm();
+          this.dataLoading = false;
+          // this.getservicecategoryList();
+        } else {
+          this.toastr.error(response.Message)
+          this.dataLoading = false;
+        //   this.servicecategory.JoinDate = new Date(this.servicecategory.JoinDate);
+        //   if (this.servicecategory.DateOfBirth)
+        //     this.servicecategory.DateOfBirth = new Date(this.servicecategory.DateOfBirth);
+        }
+      }, (err => {
+        this.toastr.error("Error occured while submitting data")
+        this.dataLoading = false;
+      }))
+    
+    }
+  }

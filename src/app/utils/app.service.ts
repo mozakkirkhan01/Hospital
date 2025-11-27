@@ -74,6 +74,13 @@ export class AppService {
     });
   }
 
+    //servicecomponent
+    saveServiceCategory(obj: any){
+      return this.http.post(this.apiUrl + 'ServiceCategory/saveServiceCategory', obj,{
+        headers: this.headers,
+      });
+    }
+
   // Company
   getCompanyList(obj: any) {
     return this.http.post(this.apiUrl + 'Company/CompanyList', obj, {
