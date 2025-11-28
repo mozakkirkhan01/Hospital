@@ -53,7 +53,7 @@ export class ManageServicecategoryComponent {
   ngOnInit(): void {
     this.StaffLogin = this.localService.getEmployeeDetail();
     this.validiateMenu();
-    // this.getservicecategoryList();
+    this.getservicecategoryList();
   }
   resetForm() {
     this.servicecategory = {};
@@ -104,7 +104,7 @@ export class ManageServicecategoryComponent {
           $('#staticBackdrop').modal('hide')
           this.resetForm();
           this.dataLoading = false;
-          // this.getservicecategoryList();
+          this.getservicecategoryList();
         } else {
           this.toastr.error(response.Message)
           this.dataLoading = false;
@@ -118,4 +118,57 @@ export class ManageServicecategoryComponent {
       }))
     
     }
+
+    getservicecategoryList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({ })).toString()
+    }
+    this.dataLoading = true
+    this.service.getservicecategoryList(obj).subscribe(r1 => {
+      let response = r1 as any
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.servicecategoryList = response.servicecategoryList;
+        console.log(this.servicecategoryList);
+      } else {
+        this.toastr.error(response.Message)
+      }
+      this.dataLoading = false
+    }, (err => {
+      this.toastr.error("Error while fetching records")
+      this.dataLoading = false;
+    }))
   }
+
+    deleteservicecategory(obj: any) {
+    if (confirm("Are your sure you want to delete this recored")) {
+      var request: RequestModel = {
+        request: this.localService.encrypt(JSON.stringify(obj)).toString()
+      }
+      this.dataLoading = true
+      this.service.deleteservicecategory(request).subscribe(r1 => {
+        let response = r1 as any
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.toastr.success("Record Deleted successfully")
+          this.getservicecategoryList()
+        } else {
+          this.toastr.error(response.Message)
+          this.dataLoading = false
+        }
+      }, (err => {
+        this.toastr.error("Error occured while deleteing the recored")
+        this.dataLoading = false
+      }))
+    }
+  }
+
+
+
+    editservicecategory(obj: any) {
+    this.resetForm()
+    this.servicecategory = obj;
+    this.servicecategory.JoinDate = new Date(obj.JoinDate);
+    if (this.servicecategory.DateOofBirth)
+      this.servicecategory.DateOfBirth = new Date(obj.DateOfBirth);
+  }
+
+}

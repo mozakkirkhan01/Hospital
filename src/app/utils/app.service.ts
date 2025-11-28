@@ -44,7 +44,7 @@ export class AppService {
   }
 
   getPatientList(obj:any) {
-    return this.http.post(this.apiUrl + 'Patient/PatientList',obj,
+    return this.http.post(this.apiUrl + 'Patient/patientList',obj,
       {headers: this.headers,});
   }
       deletePatient(obj: any) {
@@ -80,6 +80,27 @@ export class AppService {
         headers: this.headers,
       });
     }
+    getservicecategoryList(obj:any){
+     return this.http.post(this.apiUrl + 'ServiceCategory/serviceCategoryList', obj, {
+      headers: this.headers,
+    });
+  }
+
+    deleteservicecategory(obj: any) {
+    return this.http.post(this.apiUrl + 'ServiceCategory/deleteServiceCategory', obj, {
+      headers: this.headers,
+    });
+  }
+
+    //service Sub component
+
+    saveserviceSubcategory(obj: any){
+      return this.http.post(this.apiUrl + 'ServiceSubCategory/saveServiceSubCategory', obj,{
+        headers: this.headers,
+      });
+    }
+
+
 
   // Company
   getCompanyList(obj: any) {
