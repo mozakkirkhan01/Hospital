@@ -42,8 +42,26 @@
 
                             <div class="row">
 
+
+
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
-                                    <mat-label>serviceSubcategory Name</mat-label>
+                                    <mat-label [ariaSetSize]="8">Service Category</mat-label>
+                                    <mat-select #ServiceCategoryId="ngModel" name="ServiceCategoryId"
+                                        [(ngModel)]="serviceSubcategory.ServiceCategoryId" required autofocus>
+                                        <mat-option *ngFor="let option of servicecategoryList"
+                                            (onSelectionChange)="serviceSubcategory.ServiceCategoryId = option.ServiceCategoryId"
+                                            [value]="option.ServiceCategoryId">
+                                            {{option.ServiceCategoryName}}
+                                         </mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="(ServiceCategoryId.dirty  || ServiceCategoryId.touched) || (ServiceCategoryId.invalid && isSubmitted)">
+                                        service Category is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                    <mat-label>service Subcategory Name</mat-label>
                                     <input matInput #serviceSubcategoryName="ngModel" name="serviceSubcategoryName" [(ngModel)]="serviceSubcategory.serviceSubcategoryName"
                                         required autofocus>
                                     <mat-error

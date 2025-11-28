@@ -19,6 +19,7 @@ export class ManageServiceSubcategoryComponent {
 
   dataLoading: boolean = false
   serviceSubcategoryList: any = []
+  servicecategoryList: any = []
   serviceSubcategory: any = {}
   isSubmitted = false
   PageSize = ConstantData.PageSizes;
@@ -126,6 +127,28 @@ export class ManageServiceSubcategoryComponent {
       }
     }, (err => {
       this.toastr.error("Error occured while submitting data")
+      this.dataLoading = false;
+    }))
+  }
+
+
+
+    getservicecategoryList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({ })).toString()
+    }
+    this.dataLoading = true
+    this.service.getservicecategoryList(obj).subscribe(r1 => {
+      let response = r1 as any
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.servicecategoryList = response.servicecategoryList;
+        console.log(this.servicecategoryList);
+      } else {
+        this.toastr.error(response.Message)
+      }
+      this.dataLoading = false
+    }, (err => {
+      this.toastr.error("Error while fetching records")
       this.dataLoading = false;
     }))
   }
