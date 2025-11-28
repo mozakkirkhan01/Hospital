@@ -139,7 +139,7 @@
                                             (onSelectionChange)="Doctor.DepartmentId = option.DepartmentId"
                                             [value]="option.DepartmentId">
                                             {{option.DepartmentName}}
-                                        </mat-option>
+                                         </mat-option>
                                     </mat-select>
                                     <mat-error
                                         *ngIf="(DepartmentId.dirty  || DepartmentId.touched) || (DepartmentId.invalid && isSubmitted)">
