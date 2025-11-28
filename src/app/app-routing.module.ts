@@ -21,6 +21,7 @@ import { FormComponent } from './admin/form/form.component';
 import { ManageDoctorComponent } from './admin/manage-doctor/manage-doctor.component';
 import { ManagePatientComponent } from './admin/manage-patient/manage-patient.component';
 import { ManageServicecategoryComponent } from './admin/manage-servicecategory/manage-servicecategory.component';
+import { ManageServiceSubcategoryComponent } from './admin/manage-service-subcategory/manage-service-subcategory.component';
 const routes: Routes = [
   { path: '', redirectTo: "/admin-login", pathMatch: 'full' },
   { path: 'admin-login', component: AdminLoginComponent },
@@ -45,6 +46,7 @@ const routes: Routes = [
       { path: 'manage-doctor', component: ManageDoctorComponent},
       { path: 'manage-patient', component: ManagePatientComponent},
       { path: 'manage-servicecategory', component: ManageServicecategoryComponent},
+      { path: 'manage-serviceSubcategory', component: ManageServiceSubcategoryComponent}
 
     ]
   },
