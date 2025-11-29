@@ -5,7 +5,7 @@ import { AppService } from '../../utils/app.service';
 import { ConstantData } from '../../utils/constant-data';
 import { LoadDataService } from '../../utils/load-data.service';
 import { LocalService } from '../../utils/local.service';
-import { Gender, DocType, Status } from '../../utils/enum';
+import { Status } from '../../utils/enum';
 import { ActionModel, RequestModel, StaffLoginModel } from '../../utils/interface';
 import { Router } from '@angular/router';
 
@@ -21,7 +21,6 @@ export class ManageServicecategoryComponent {
   servicecategoryList: any = []
   servicecategory: any = {}
   isSubmitted = false
-  DepartmentList: any = []
   PageSize = ConstantData.PageSizes;
   p: number = 1;
   Search: string = '';
@@ -108,9 +107,6 @@ export class ManageServicecategoryComponent {
         } else {
           this.toastr.error(response.Message)
           this.dataLoading = false;
-        //   this.servicecategory.JoinDate = new Date(this.servicecategory.JoinDate);
-        //   if (this.servicecategory.DateOfBirth)
-        //     this.servicecategory.DateOfBirth = new Date(this.servicecategory.DateOfBirth);
         }
       }, (err => {
         this.toastr.error("Error occured while submitting data")
@@ -118,6 +114,30 @@ export class ManageServicecategoryComponent {
       }))
     
     }
+// getservicecategoryList() {
+//   const obj: RequestModel = {
+//     request: this.localService.encrypt(JSON.stringify({})).toString()
+//   };
+//   this.dataLoading = true;
+
+//   this.service.getservicecategoryList(obj).subscribe(
+//     (response: any) => {
+//       console.log('📡 Full API Response:', response);
+//       if (response.Message === ConstantData.SuccessMessage) {
+//         this.servicecategoryList = response.serviceCategoryList || [];
+//         console.log('✅ Data Bound:', this.servicecategoryList);
+//       } else {
+//         this.toastr.error(response.Message);
+//       }
+//       this.dataLoading = false;
+//     },
+//     (err) => {
+//       console.error('❌ API Error:', err);
+//       this.toastr.error("Error while fetching records");
+//       this.dataLoading = false;
+//     }
+//   );
+// }
 
     getservicecategoryList() {
     var obj: RequestModel = {
@@ -126,8 +146,10 @@ export class ManageServicecategoryComponent {
     this.dataLoading = true
     this.service.getservicecategoryList(obj).subscribe(r1 => {
       let response = r1 as any
+      
       if (response.Message == ConstantData.SuccessMessage) {
-        this.servicecategoryList = response.servicecategoryList;
+        
+       this.servicecategoryList = response.serviceCategoryList || [];
         console.log(this.servicecategoryList);
       } else {
         this.toastr.error(response.Message)

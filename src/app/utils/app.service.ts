@@ -99,7 +99,20 @@ export class AppService {
         headers: this.headers,
       });
     }
+    
+    getserviceSubcategoryList(obj:any)
+    {
+      return this.http.post(this.apiUrl + 'ServiceSubCategory/serviceSubCategoryList', obj, {
+      headers: this.headers,
+      });
+    }
 
+      deleteserviceSubcategory(obj: any) 
+    {
+      return this.http.post(this.apiUrl + 'ServiceSubCategory/deleteserviceSubCategory', obj, {
+      headers: this.headers,
+     });
+    }
 
 
   // Company
