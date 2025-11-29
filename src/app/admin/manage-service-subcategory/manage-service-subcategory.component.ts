@@ -61,7 +61,8 @@ export class ManageServiceSubcategoryComponent {
   ngOnInit(): void {
     this.StaffLogin = this.localService.getEmployeeDetail();
     this.validiateMenu();
-    // this.getserviceSubcategoryList();
+    this.getservicecategoryList();
+    this.getserviceSubcategoryList();
   }
   resetForm() {
     this.serviceSubcategory = {};
@@ -117,7 +118,7 @@ export class ManageServiceSubcategoryComponent {
         $('#staticBackdrop').modal('hide')
         this.dataLoading = false;
         this.resetForm();
-        // this.getserviceSubcategoryList();
+        this.getserviceSubcategoryList();
       } else {
         this.toastr.error(response.Message)
         this.dataLoading = false;
@@ -140,8 +141,10 @@ export class ManageServiceSubcategoryComponent {
     this.dataLoading = true
     this.service.getservicecategoryList(obj).subscribe(r1 => {
       let response = r1 as any
+      
       if (response.Message == ConstantData.SuccessMessage) {
-        this.servicecategoryList = response.servicecategoryList;
+        
+       this.servicecategoryList = response.serviceCategoryList || [];
         console.log(this.servicecategoryList);
       } else {
         this.toastr.error(response.Message)
@@ -153,6 +156,54 @@ export class ManageServiceSubcategoryComponent {
     }))
   }
 
+    getserviceSubcategoryList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({ })).toString()
+    }
+    this.dataLoading = true
+    this.service.getserviceSubcategoryList(obj).subscribe(r1 => {
+      let response = r1 as any
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.serviceSubcategoryList = response.serviceSubcategoryList || [];
+      } else {
+        this.toastr.error(response.Message)
+      }
+      this.dataLoading = false
+    }, (err => {
+      this.toastr.error("Error while fetching records")
+      this.dataLoading = false;
+    }))
+  }
+
+
+    deleteserviceSubcategory(obj: any) 
+    {
+      if (confirm("Are your sure you want to delete this recored")) {
+        var request: RequestModel = {
+        request: this.localService.encrypt(JSON.stringify(obj)).toString()
+      }
+      this.dataLoading = true
+      this.service.deleteserviceSubcategory(request).subscribe(r1 => {
+        let response = r1 as any
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.toastr.success("Record Deleted successfully")
+          this.getserviceSubcategoryList()
+        } else {
+          this.toastr.error(response.Message)
+          this.dataLoading = false
+        }
+      }, (err => {
+        this.toastr.error("Error occured while deleteing the recored")
+        this.dataLoading = false
+        }))
+      }
+    }
+
+
+    editserviceSubcategory(obj: any) {
+    this.resetForm()
+    this.serviceSubcategory = obj;
+  }
 
 
 }
