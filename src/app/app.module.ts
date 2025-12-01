@@ -42,6 +42,7 @@ import { ManageDoctorComponent } from './admin/manage-doctor/manage-doctor.compo
 import { ManagePatientComponent } from './admin/manage-patient/manage-patient.component';
 import { ManageServicecategoryComponent } from './admin/manage-servicecategory/manage-servicecategory.component';
 import { ManageServiceSubcategoryComponent } from './admin/manage-service-subcategory/manage-service-subcategory.component';
+import { ManageServicechargeComponent } from './admin/manage-servicecharge/manage-servicecharge.component';
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { ManageServiceSubcategoryComponent } from './admin/manage-service-subcat
     ManagePatientComponent,
     ManageServicecategoryComponent,
     ManageServiceSubcategoryComponent,
+    ManageServicechargeComponent,
   ],
   imports: [
     BrowserModule,

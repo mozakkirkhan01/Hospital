@@ -95,7 +95,7 @@ export class ManageServicecategoryComponent {
         let response = r1 as any
         if (response.Message == ConstantData.SuccessMessage) {
           if (this.servicecategory.servicecategoryId > 0) {
-            this.toastr.success("servicecategory detail updated successfully")
+            this.toastr.success("Service Category detail updated successfully")
   
           } else {
             this.toastr.success("servicecategory added successfully")

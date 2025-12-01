@@ -16,7 +16,7 @@
          
              <button mat-raised-button color="primary" *ngIf="action.CanCreate" class="float-right"
                 data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="resetForm()">New
-                service category</button>
+                Service category</button>
         </div>
     </div>
 
@@ -81,14 +81,14 @@
 
     </section>
 
-    <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade modal-lg" id="staticBackdrop"
+    <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade modal-s" id="staticBackdrop"
         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">{{servicecategory.servicecategoryId > 0 ? 'Update':'New'}}
-                        servicecategory
+                        Service Category
                     </h1>
                     <button type=" button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                         ></button>
@@ -101,8 +101,8 @@
 
                             <div class="row">
 
-                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
-                                    <mat-label>servicecategory Name</mat-label>
+                                <mat-form-field appearance="outline" class="col-sm-12 form-group">
+                                    <mat-label>Service Category Name</mat-label>
                                     <input matInput #servicecategoryName="ngModel" name="servicecategoryName" [(ngModel)]="servicecategory.servicecategoryName"
                                         required autofocus>
 
@@ -117,7 +117,7 @@
                             
 
                                 <!--status-->
-                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                <mat-form-field appearance="outline" class="col-sm-12 form-group">
                                     <mat-label>Status</mat-label>
                                     <mat-select #Status="ngModel" name="Status" [(ngModel)]="servicecategory.Status" required>
                                         <mat-option [value]="status.Key"
