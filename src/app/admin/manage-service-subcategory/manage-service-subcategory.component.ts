@@ -110,10 +110,10 @@ export class ManageServiceSubcategoryComponent {
       let response = r1 as any
       if (response.Message == ConstantData.SuccessMessage) {
         if (this.serviceSubcategory.serviceSubcategoryId > 0) {
-          this.toastr.success("serviceSubcategory detail updated successfully")
+          this.toastr.success("Service Sub-category detail updated successfully")
 
         } else {
-          this.toastr.success("serviceSubcategory added successfully")
+          this.toastr.success("Service Sub-category added successfully")
         }
         $('#staticBackdrop').modal('hide')
         this.dataLoading = false;

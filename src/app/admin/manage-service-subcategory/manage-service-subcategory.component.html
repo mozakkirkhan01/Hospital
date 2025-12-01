@@ -16,7 +16,7 @@
          
              <button mat-raised-button color="primary" *ngIf="action.CanCreate" class="float-right"
                 data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="resetForm()">New
-                serviceSubcategory</button>
+                Service Sub-category</button>
         </div>
     </div>
 
@@ -40,8 +40,8 @@
                         <thead>
                             <tr>
                                 <th>S.No</th>
-                                <th (click)="sort('ServiceSubCategoryName')">Service Sub Category Name</th>
-                                <th (click)="sort('ServiceCategoryName')">ServiceCategory Name</th>
+                                <th (click)="sort('ServiceCategoryName')">Service Name</th>
+                                <th (click)="sort('ServiceSubCategoryName')">Service Sub-category Name</th>
                                 <th *ngIf="action.CanEdit">Edit</th>
                                 <th *ngIf="action.CanDelete">Delete</th>
                                 <th (click)="sort('Status')">Status</th>
@@ -51,8 +51,8 @@
                             <tr
                                 *ngFor="let item of serviceSubcategoryList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
                                 <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                 <td>{{item.ServiceCategoryName}}</td>
                                 <td>{{item.ServiceSubCategoryName}}</td>
-                                <td>{{item.ServiceCategoryName}}</td>
                                 <td *ngIf="action.CanEdit">
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                     data-bs-target="#staticBackdrop" (click)="editserviceSubcategory(item)">
@@ -84,14 +84,14 @@
     </section>
 
 
-    <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade modal-lg" id="staticBackdrop"
+    <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade modal-s" id="staticBackdrop"
         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">{{serviceSubcategory.serviceSubcategoryId > 0 ? 'Update':'New'}}
-                        serviceSubcategory
+                        Service Sub-category
                     </h1>
 
                      <button type=" button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
@@ -105,7 +105,7 @@
 
 
 
-                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                <mat-form-field appearance="outline" class="col-sm- form-group">
                                     <mat-label [ariaSetSize]="8">Service Category</mat-label>
                                     <mat-select #ServiceCategoryId="ngModel" name="ServiceCategoryId"
                                         [(ngModel)]="serviceSubcategory.ServiceCategoryId" required autofocus>
@@ -117,17 +117,17 @@
                                     </mat-select>
                                     <mat-error
                                         *ngIf="(ServiceCategoryId.dirty  || ServiceCategoryId.touched) || (ServiceCategoryId.invalid && isSubmitted)">
-                                        service Category is <strong>required</strong>
+                                        Service Category is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
-                                    <mat-label>service Subcategory Name</mat-label>
+                                <mat-form-field appearance="outline" class="col-sm- form-group">
+                                    <mat-label>Service Sub-category Name</mat-label>
                                     <input matInput #serviceSubcategoryName="ngModel" name="serviceSubcategoryName" [(ngModel)]="serviceSubcategory.serviceSubcategoryName"
                                         required autofocus>
                                     <mat-error
                                         *ngIf="(serviceSubcategoryName.dirty  || serviceSubcategoryName.touched) || (serviceSubcategoryName.invalid && isSubmitted)">
-                                        serviceSubcategory name is <strong>required</strong>
+                                        Service Sub-category name is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>
                             
@@ -135,7 +135,7 @@
                         
 
                                 <!--status-->
-                                <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                <mat-form-field appearance="outline" class="col-sm- form-group">
                                     <mat-label>Status</mat-label>
                                     <mat-select #Status="ngModel" name="Status" [(ngModel)]="serviceSubcategory.Status" required>
                                         <mat-option [value]="status.Key"
