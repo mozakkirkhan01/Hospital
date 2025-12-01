@@ -113,7 +113,14 @@ export class AppService {
       headers: this.headers,
      });
     }
+  
 
+    //service charge
+        saveservicecharge(obj: any){
+      return this.http.post(this.apiUrl + 'ServiceCharge/saveServiceCharge', obj,{
+        headers: this.headers,
+      });
+    }
 
   // Company
   getCompanyList(obj: any) {
