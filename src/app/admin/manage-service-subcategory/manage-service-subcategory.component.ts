@@ -36,10 +36,6 @@ export class ManageServiceSubcategoryComponent {
   MaritalStatusList = this.loadDataService.GetEnumList(MaritalStatus);
   serviceSubcategoryTypeList = this.loadDataService.GetEnumList(DocType);
   AllStatusList = Status;
-  AllGenderList = Gender;
-  AllMaritalStatusList = MaritalStatus;
-  AllBloodGroupList = BloodGroup;
-  AllserviceSubcategoryTypeList = DocType;
 
   sort(key: any) {
     this.sortKey = key;
