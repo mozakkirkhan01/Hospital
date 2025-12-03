@@ -110,7 +110,7 @@
                                     <mat-select #ServiceChargeId="ngModel" name="ServiceChargeId"
                                         [(ngModel)]="servicecharge.ServiceChargeId" required autofocus>
                                         <mat-option *ngFor="let option of servicecategoryList"
-                                            (onSelectionChange)="servicecharge.ServiceChargeId = option.ServiceChargeId"
+                                            (onSelectionChange)="servicecharge.ServiceChargeId = option.ServiceChargeId "
                                             [value]="option.ServiceCategoryId">
                                             {{option.ServiceCategoryName}}
                                          </mat-option>

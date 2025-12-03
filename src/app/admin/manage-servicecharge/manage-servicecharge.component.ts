@@ -83,6 +83,13 @@ export class ManageServicechargeComponent {
       this.dataLoading = false;
     }))
   }
+
+  changeCategory() {
+this.servicecategoryList = this.serviceSubcategoryList.filter((x: any) => 
+  x.ServiceChargeId == this.servicecharge.ServiceChargeId
+);
+
+}
   @ViewChild('formservicecharge') formservicecharge: NgForm;
     saveservicecharge() {
       this.isSubmitted = true;
