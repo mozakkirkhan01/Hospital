@@ -20,7 +20,7 @@
         </div>
     </div>
 
-        <!-- <section class="section dashboard">
+        <section class="section dashboard">
         <div class="card">
             <div class="card-body ">
                 <div class="dataTable-top">
@@ -42,6 +42,7 @@
                                 <th>S.No</th>
                                 <th (click)="sort('ServiceCategoryName')">Service Name</th>
                                 <th (click)="sort('ServiceSubCategoryName')">Service Sub-category Name</th>
+                                <th (click)="sort('ServiceChargeAmount')">Service Charge Amount</th>
                                 <th *ngIf="action.CanEdit">Edit</th>
                                 <th *ngIf="action.CanDelete">Delete</th>
                                 <th (click)="sort('Status')">Status</th>
@@ -49,18 +50,19 @@
                         </thead>
                         <tbody>
                             <tr
-                                *ngFor="let item of serviceSubcategoryList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
+                                *ngFor="let item of servicechargeList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
                                 <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
                                  <td>{{item.ServiceCategoryName}}</td>
                                 <td>{{item.ServiceSubCategoryName}}</td>
+                                <td>{{item.ServiceChargeAmount}}</td>
                                 <td *ngIf="action.CanEdit">
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop" (click)="editserviceSubcategory(item)">
+                                    data-bs-target="#staticBackdrop" (click)="editservicecharge(item)">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </td>
                                 <td *ngIf="action.CanDelete">
-                                    <button class="btn btn-sm btn-danger" (click)="deleteserviceSubcategory(item)">
+                                    <button class="btn btn-sm btn-danger" (click)="deleteservicecharge(item)">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </td>
@@ -81,7 +83,7 @@
             </div>
         </div>
 
-    </section> -->
+    </section> 
 
 
     <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade modal-s" id="staticBackdrop"
@@ -104,11 +106,42 @@
                             <div class="row">
 
 
+                                          <mat-form-field appearance="outline"
+                                                class="col-md-12 mb-2 custom-mat-form-field">
+                                                <mat-label>Select Service Category</mat-label>
+                                                <mat-select name="ServiceCategoryId" (selectionChange)="changeCategory()"
+                                                    [(ngModel)]="servicecharge.ServiceCategoryId" required>
+                                                    <mat-option [value]="status.ServiceCategoryId"
+                                                        *ngFor="let status of servicecategoryList">{{status.ServiceCategoryName}}</mat-option>
+                                                </mat-select>
+                                                <mat-error>Required Field !!</mat-error>
+                                            </mat-form-field>
+                                            
+                                              <mat-form-field appearance="outline"
+                                                class="col-md-12 mb-2 custom-mat-form-field">
+                                                <mat-label>Select Service Sub Category</mat-label>
+                                                <mat-select name="ServiceSubCategoryId"
+                                                    [(ngModel)]="servicecharge.ServiceSubCategoryId" required>
+                                                    <mat-option [value]="status.ServiceSubCategoryId"
+                                                        *ngFor="let status of serviceSubcategoryList">{{status.ServiceSubCategoryName}}</mat-option>
+                                                </mat-select>
+                                                <mat-error>Required Field !!</mat-error>
+                                            </mat-form-field>
 
-                                <mat-form-field appearance="outline" class="col-sm- form-group">
+                                <mat-form-field appearance="outline" class="col-sm-12 form-group">
+                                    <mat-label>Service Charge Amount </mat-label>
+                                    <input type="number" matInput #ServiceChargeAmount="ngModel" name="ConsultFee"
+                                        [(ngModel)]="servicecharge.ServiceChargeAmount" required autofocus>
+                                    <!--<mat-icon matSuffix>phone</mat-icon>-->
+                                    <mat-error
+                                        *ngIf="(ServiceChargeAmount.dirty  || ServiceChargeAmount.touched) || (ServiceChargeAmount.invalid && isSubmitted)">
+                                        Mobile No is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                                <!-- <mat-form-field appearance="outline" class="col-sm- form-group">
                                     <mat-label [ariaSetSize]="8">Service Category</mat-label>
-                                    <mat-select #ServiceChargeId="ngModel" name="ServiceChargeId"
-                                        [(ngModel)]="servicecharge.ServiceChargeId" required autofocus>
+                                    <mat-select #ServiceChargeId="ngModel" name="ServiceCategoryId"
+                                        [(ngModel)]="servicecharge.ServiceCategoryId" required autofocus>
                                         <mat-option *ngFor="let option of servicecategoryList"
                                             (onSelectionChange)="servicecharge.ServiceChargeId = option.ServiceChargeId "
                                             [value]="option.ServiceCategoryId">
@@ -119,10 +152,10 @@
                                         *ngIf="(ServiceChargeId.dirty  || ServiceChargeId.touched) || (ServiceChargeId.invalid && isSubmitted)">
                                         Service Category is <strong>required</strong>
                                     </mat-error>
-                                </mat-form-field>
+                                </mat-form-field> -->
 
 
-                                <mat-form-field appearance="outline" class="col-sm- form-group">
+                                <!-- <mat-form-field appearance="outline" class="col-sm- form-group">
                                     <mat-label [ariaSetSize]="8">Service Sub Category</mat-label>
                                     <mat-select #ServiceChargeId="ngModel" name="ServiceChargeId"
                                         [(ngModel)]="servicecharge.ServiceSubCategoryId" required autofocus>
@@ -136,7 +169,7 @@
                                         *ngIf="(ServiceChargeId.dirty  || ServiceChargeId.touched) || (ServiceChargeId.invalid && isSubmitted)">
                                         Service  Sub-Category is <strong>required</strong>
                                     </mat-error>
-                                </mat-form-field>
+                                </mat-form-field> -->
                             
                             
                         
