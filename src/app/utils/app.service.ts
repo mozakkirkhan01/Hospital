@@ -123,7 +123,7 @@ export class AppService {
     }
 
     //Service Charge list
-    getservicechargeList(obj:any)
+    getServiceChargeList(obj:any)
     {
       return this.http.post(this.apiUrl + 'ServiceCharge/serviceChargeList', obj, {
       headers: this.headers,

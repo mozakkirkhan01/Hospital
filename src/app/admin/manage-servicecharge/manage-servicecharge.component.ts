@@ -28,7 +28,7 @@ declare var $: any;
 })
 export class ManageServicechargeComponent {
   dataLoading: boolean = false;
-  servicechargeList: any = [];
+  serviceChargeList: any = [];
   servicecategoryList: any[] = [];
   serviceSubcategoryList: any[] = [];
   servicecharge: any = {};
@@ -67,7 +67,7 @@ export class ManageServicechargeComponent {
     this.validiateMenu();
     this.getservicecategoryList();
     this.getserviceSubcategoryList();
-    this.getservicechargeList();
+    this.getServiceChargeList();
   }
   resetForm() {
     this.servicecharge = {};
@@ -155,19 +155,12 @@ export class ManageServicechargeComponent {
   }
 
   changeCategory() {
-    console.log(this.servicecharge);
     const selectedId = Number(this.servicecharge.ServiceCategoryId);
     this.serviceSubcategoryList = this.AllserviceSubcategoryList.filter(
       (x) => Number(x.ServiceCategoryId) === selectedId
     );
     this.servicecharge.ServiceSubCategoryId = null;
   }
-  //   changeCategory() {
-  // this.servicecategoryList = this.serviceSubcategoryList.filter((x: any) =>
-  //   x.ServiceChargeId == this.servicecharge.ServiceChargeId
-  // );
-
-  // }
 
   saveservicecharge() {
     this.isSubmitted = true;
@@ -199,7 +192,7 @@ export class ManageServicechargeComponent {
           $('#staticBackdrop').modal('hide');
           this.dataLoading = false;
           this.resetForm();
-          this.getservicechargeList();
+          this.getServiceChargeList();
         } else {
           this.toastr.error(response.Message);
           this.dataLoading = false;
@@ -218,16 +211,16 @@ export class ManageServicechargeComponent {
   }
 
  
-    getservicechargeList() {
+    getServiceChargeList() {
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify({ })).toString()
     }
     this.dataLoading = true
-    this.service.getservicechargeList(obj).subscribe(r1 => {
+    this.service.getServiceChargeList(obj).subscribe(r1 => {
       let response = r1 as any
       if (response.Message == ConstantData.SuccessMessage) {
-        this.servicechargeList = response.servicechargeList || [];
-          console.log('vvv', this.servicechargeList);
+        this.serviceChargeList = response.serviceChargeList || [];
+          console.log('vvv', this.serviceChargeList);
 
       } else {
         this.toastr.error(response.Message)
@@ -245,12 +238,12 @@ export class ManageServicechargeComponent {
         request: this.localService.encrypt(JSON.stringify(obj)).toString(),
       };
       this.dataLoading = true;
-      this.service.getservicechargeList(request).subscribe(
+      this.service.getServiceChargeList(request).subscribe(
         (r1) => {
           let response = r1 as any;
           if (response.Message == ConstantData.SuccessMessage) {
             this.toastr.success('Record Deleted successfully');
-            this.getservicechargeList();
+            this.getServiceChargeList();
           } else {
             this.toastr.error(response.Message);
             this.dataLoading = false;

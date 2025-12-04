@@ -50,7 +50,7 @@
                         </thead>
                         <tbody>
                             <tr
-                                *ngFor="let item of servicechargeList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
+                                *ngFor="let item of serviceChargeList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
                                 <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
                                  <td>{{item.ServiceCategoryName}}</td>
                                 <td>{{item.ServiceSubCategoryName}}</td>
