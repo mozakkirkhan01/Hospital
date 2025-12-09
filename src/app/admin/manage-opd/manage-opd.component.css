@@ -1,0 +1,35 @@
+.patient-details {
+  position: relative;
+  border: 1.5px solid #807e7e;
+  border-radius: 10px;
+  padding: 2rem 1.5rem 0rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+/* Rebuild top border to stay visible behind legend */
+
+
+/* Perfect centered legend with only text background */
+.patient-details legend {
+  all: unset; /* reset browser default legend behavior */
+  position: absolute;
+  top: -0.6em;
+  left: 7%;
+  transform: translateX(-50%);
+  padding: 0 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4d4c4c;
+  background: #fff; /* only covers text area */
+  line-height: 1;
+  white-space: nowrap; /* prevents stretching */
+  z-index: 1;
+  border-radius: 4px;
+  display: inline-block; /* ensures background wraps text only */
+}
+
+.form-group {
+  margin-bottom: 0rem;
+}
