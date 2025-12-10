@@ -26,6 +26,7 @@ import {
 })
 export class ManageOpdComponent implements OnInit {
   OpdPatient: any = {};
+  ServiceDetail:any={};
   isSubmitted = false;
   PageSize = ConstantData.PageSizes;
   p: number = 1;
@@ -93,6 +94,7 @@ export class ManageOpdComponent implements OnInit {
   }
 
   @ViewChild('formOpdPatient') formOpdPatient: NgForm;
+  @ViewChild('formService') formService: NgForm;
 
   resetOpdPatientForm() {
     this.OpdPatient = {};
