@@ -10,6 +10,11 @@ export enum PaymentStatus {
     Paid = 1,
     Due = 2
 }
+
+export enum OpdType {
+    New = 1,
+    FollowUp = 2
+}
 export enum MaritalStatus {
     Married = 1,
     UnMarried = 2
@@ -55,6 +60,10 @@ export enum PaymentMode {
     CHEQUE = 3,
     DD = 5,
     OTHERS = 4
+}
+export enum PaymentType {
+    FullPaid = 1,
+    Dues = 2
 }
 export enum BillStatus {
     Paid = 1,

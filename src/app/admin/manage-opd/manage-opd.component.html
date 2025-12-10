@@ -1,0 +1,162 @@
+<p>manage-opd works!</p>
+<app-progress *ngIf="dataLoading"></app-progress>
+<main id="main" class="main" *ngIf="action.ResponseReceived">
+  <div class="row">
+    <div class="pagetitle dashboard col-sm-8">
+      <h1>{{ action.MenuTitle }}</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a routerLink="admin/admin-dashboard">Home</a>
+          </li>
+          <li class="breadcrumb-item">{{ action.ParentMenuTitle }}</li>
+          <li class="breadcrumb-item active">{{ action.MenuTitle }}</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-sm-4"></div>
+  </div>
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <!-- No Labels Form -->
+            <form #formOpdPatient="ngForm" class="row g-3">
+              <fieldset class="patient-details">
+                <legend>Patient Details</legend>
+
+                <div class="row">
+                  <mat-form-field
+                    appearance="outline"
+                    class="col-md-4 form-group"
+                  >
+                    <mat-label
+                      >Search By Patient UHID No./Name/Mobile No.</mat-label
+                    >
+                    <input
+                      matInput
+                      #CustomerId="ngModel"
+                      name="PatientId"
+                      (ngModelChange)="filterPatientList($event)"
+                      placeholder="Search Patient UHID No./Name/Mobile No."
+                      [(ngModel)]="OpdPatient.PatientName"
+                      [matAutocomplete]="autoPatient"
+                      required
+                      autofocus
+                    />
+                    <mat-autocomplete
+                      #autoPatient="matAutocomplete"
+                      (optionSelected)="afterPatientSelected($event)"
+                    >
+                      <mat-option
+                        *ngFor="let option of PatientList"
+                        [id]="option.PatientId"
+                        [value]="option.PatientName"
+                        >{{ option.SearchPatient }}</mat-option
+                      >
+                    </mat-autocomplete>
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      *ngIf="OpdPatient.PatientName"
+                      color="primary"
+                      (click)="clearPatient()"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error>Patient Name required !!</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field
+                    appearance="outline"
+                    class="col-md-2 form-group"
+                  >
+                    <mat-label>UHID No.</mat-label>
+                    <input
+                      matInput
+                      #UHIDNo="ngModel"
+                      name="UHIDNo"
+                      [(ngModel)]="OpdPatient.UHIDNo"
+                      readonly
+                    />
+                  </mat-form-field>
+
+                  <mat-form-field
+                    appearance="outline"
+                    class="col-md-3 form-group"
+                  >
+                    <mat-label>Patient Name</mat-label>
+                    <input
+                      matInput
+                      #PatientNameauto="ngModel"
+                      name="PatientNameauto"
+                      [(ngModel)]="OpdPatient.PatientNameauto"
+                      readonly
+                    />
+                  </mat-form-field>
+
+                  <mat-form-field
+                    appearance="outline"
+                    class="col-md-1 form-group"
+                  >
+                    <mat-label>Age</mat-label>
+                    <input
+                      matInput
+                      #Age="ngModel"
+                      name="Age"
+                      [(ngModel)]="OpdPatient.Age"
+                      readonly
+                    />
+                  </mat-form-field>
+
+                  <mat-form-field
+                    appearance="outline"
+                    class="col-md-2 form-group"
+                  >
+                    <mat-label>Mobile No.</mat-label>
+                    <input
+                      matInput
+                      #MobileNo="ngModel"
+                      name="MobileNo"
+                      [(ngModel)]="OpdPatient.MobileNo"
+                      readonly
+                    />
+                  </mat-form-field>
+
+                  <mat-form-field
+                    appearance="outline"
+                    class="col-md-3 form-group"
+                  >
+                    <mat-label>Address</mat-label>
+                    <input
+                      matInput
+                      #Address="ngModel"
+                      name="Address"
+                      [(ngModel)]="OpdPatient.Address"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </fieldset>
+            </form>
+
+            <form #formOpdPatient="ngForm" class="row g-3">
+              <fieldset class="patient-details">
+                <legend>Service Details</legend>
+                <div class="row">
+
+                </div>
+              </fieldset>
+            </form>
+
+            <!-- <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+              </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
