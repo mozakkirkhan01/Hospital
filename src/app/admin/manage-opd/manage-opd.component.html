@@ -140,11 +140,42 @@
                 </div>
               </fieldset>
             </form>
-
+            <br>
             <form #formOpdPatient="ngForm" class="row g-3">
               <fieldset class="patient-details">
                 <legend>Service Details</legend>
                 <div class="row">
+
+                   <mat-form-field appearance="outline"
+                                                class="col-md-4 mb-2 custom-mat-form-field">
+                                                <mat-label>Select Service Category</mat-label>
+                                                <mat-select name="ServiceCategoryId" (selectionChange)="changeCategory()"
+                                                    [(ngModel)]="servicecharge.ServiceCategoryId" required>
+                                                    <mat-option [value]="status.ServiceCategoryId"
+                                                        *ngFor="let status of servicecategoryList">{{status.ServiceCategoryName}}</mat-option>
+                                                </mat-select>
+                                                <mat-error>Required Field !!</mat-error>
+                                            </mat-form-field>
+                                            
+                                              <mat-form-field appearance="outline"
+                                                class="col-md-4 mb-2 custom-mat-form-field">
+                                                <mat-label>Select Service Sub Category</mat-label>
+                                                <mat-select name="ServiceSubCategoryId"
+                                                    [(ngModel)]="servicecharge.ServiceSubCategoryId" required>
+                                                    <mat-option [value]="status.ServiceSubCategoryId"
+                                                        *ngFor="let status of serviceSubcategoryList">{{status.ServiceSubCategoryName}}</mat-option>
+                                                </mat-select>
+                                                <mat-error>Required Field !!</mat-error>
+                                          </mat-form-field>
+
+                                       
+                                          
+                                          
+                  <!-- <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Amount</mat-label>
+                    <input matInput #ServiceChargeAmount="ngModel" name="Amount" [(ngModel)]="OpdPatient.Amount" readonly />
+                  </mat-form-field> -->
+
 
                 </div>
               </fieldset>

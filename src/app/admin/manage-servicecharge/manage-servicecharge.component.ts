@@ -261,4 +261,21 @@ export class ManageServicechargeComponent {
     this.resetForm();
     this.servicecharge = obj;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 }
+
+

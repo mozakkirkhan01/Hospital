@@ -60,6 +60,9 @@ export class ManageOpdComponent implements OnInit {
     this.StaffLogin = this.localService.getEmployeeDetail();
     this.validiateMenu();
     this.getPatientList();
+    this.changeCategory();
+    this.getservicecategoryList();
+    this.getserviceSubcategoryList();
   }
 
   validiateMenu() {
@@ -183,6 +186,67 @@ afterServiceCategorySelected(event: any) {
       this.PatientList = this.AllPatientList;
     }
     this.OpdPatient.PatientId = 0;
+  }
+
+
+  servicecharge: any = {};
+  serviceSubcategoryList: any[] = [];
+  AllserviceSubcategoryList: any[] = [];
+  servicecategoryList: any[] = [];
+
+
+    changeCategory() {
+    const selectedId = Number(this.servicecharge.ServiceCategoryId);
+    this.serviceSubcategoryList = this.AllserviceSubcategoryList.filter(
+      (x) => Number(x.ServiceCategoryId) === selectedId
+    );
+    this.servicecharge.ServiceSubCategoryId = null;
+  }
+
+    getservicecategoryList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({})).toString(),
+    };
+    this.dataLoading = true;
+    this.service.getservicecategoryList(obj).subscribe(
+      (r1) => {
+        let response = r1 as any;
+
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.servicecategoryList = response.serviceCategoryList || [];
+        } else {
+          this.toastr.error(response.Message);
+        }
+        this.dataLoading = false;
+      },
+      (err) => {
+        this.toastr.error('Error while fetching records');
+        this.dataLoading = false;
+      }
+    );
+  }
+
+    getserviceSubcategoryList() {
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({})).toString(),
+    };
+    this.dataLoading = true;
+    this.service.getserviceSubcategoryList(obj).subscribe(
+      (r1) => {
+        let response = r1 as any;
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.AllserviceSubcategoryList = response.serviceSubcategoryList;
+          console.log(this.AllserviceSubcategoryList);
+        } else {
+          this.toastr.error(response.Message);
+        }
+        this.dataLoading = false;
+      },
+      (err) => {
+        this.toastr.error('Error while fetching records');
+        this.dataLoading = false;
+      }
+    );
   }
 
 
