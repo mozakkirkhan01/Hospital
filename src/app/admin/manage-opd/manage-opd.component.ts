@@ -106,25 +106,6 @@ export class ManageOpdComponent implements OnInit {
   }
   AllPatientList: any []=[];
   PatientList: any []=[];
-// getPatientList() {
-//     var obj: RequestModel = {
-//       request: this.localService.encrypt(JSON.stringify({ })).toString()
-//     }
-//     this.dataLoading = true
-//     this.service.getPatientList(obj).subscribe(r1 => {
-//       let response = r1 as any
-//       if (response.Message == ConstantData.SuccessMessage) {
-//         this.PatientList = response.PatientList;
-//         console.log("Patient List :", this.PatientList);
-//       } else {
-//         this.toastr.error(response.Message)
-//       }
-//       this.dataLoading = false
-//     }, (err => {
-//       this.toastr.error("Error while fetching records")
-//       this.dataLoading = false;
-//     }))
-//   }
 
  getPatientList() {
     var obj: RequestModel = {
@@ -175,6 +156,32 @@ afterPatientSelected(event: any) {
     this.OpdPatient.Address = Patient.Address;
   }
 
+
+
+
+
+
+
+
+  // service category selection
+afterServiceCategorySelected(event: any) {
+
+}
+  clearServie() {
+    this.PatientList = this.AllPatientList;
+    this.OpdPatient.PatientId = null;
+    this.OpdPatient = {};
+  }
+
+     filterServiceList(value: any) {
+    if (value) {
+      const filterValue = value.toLowerCase();
+      this.PatientList = this.AllPatientList.filter((option: any) => option.SearchPatient.toLowerCase().includes(filterValue));
+    } else {
+      this.PatientList = this.AllPatientList;
+    }
+    this.OpdPatient.PatientId = 0;
+  }
 
 
 
