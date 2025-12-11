@@ -26,7 +26,7 @@ import {
 })
 export class ManageOpdComponent implements OnInit {
   OpdPatient: any = {};
-  ServiceDetail:any={};
+  ServiceDetail: any = {};
   isSubmitted = false;
   PageSize = ConstantData.PageSizes;
   p: number = 1;
@@ -63,11 +63,11 @@ export class ManageOpdComponent implements OnInit {
     this.changeCategory();
     this.getservicecategoryList();
     this.getserviceSubcategoryList();
-    this.ServiceDetail.Quantity=1;
-    this.ServiceDetail.Discount=0;
-    this.getServiceChargeList()
+    this.ServiceDetail.Quantity = 1;
+    this.ServiceDetail.Discount = 0;
+    this.getServiceChargeList();
   }
-sort(key: any) {
+  sort(key: any) {
     this.sortKey = key;
     this.reverse = !this.reverse;
   }
@@ -115,36 +115,44 @@ sort(key: any) {
     }
     this.isSubmitted = false;
   }
-  AllPatientList: any []=[];
-  PatientList: any []=[];
+  AllPatientList: any[] = [];
+  PatientList: any[] = [];
 
- getPatientList() {
+  getPatientList() {
     var obj: RequestModel = {
-      request: this.localService.encrypt(JSON.stringify({ Status: Status.Active })).toString()
-    }
-    this.dataLoading = true
-    this.service.getPatientList(obj).subscribe(r1 => {
-      let response = r1 as any
-      if (response.Message == ConstantData.SuccessMessage) {
-        this.AllPatientList = response.PatientList;
-        this.AllPatientList.map(x1 => x1.SearchPatient = `${x1.PatientName} - ${x1.UHIDNo} - ${x1.MobileNo}`);
-        this.PatientList = this.AllPatientList;
-      } else {
-        this.toastr.error(response.Message)
+      request: this.localService
+        .encrypt(JSON.stringify({ Status: Status.Active }))
+        .toString(),
+    };
+    this.dataLoading = true;
+    this.service.getPatientList(obj).subscribe(
+      (r1) => {
+        let response = r1 as any;
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.AllPatientList = response.PatientList;
+          this.AllPatientList.map(
+            (x1) =>
+              (x1.SearchPatient = `${x1.PatientName} - ${x1.UHIDNo} - ${x1.MobileNo}`)
+          );
+          this.PatientList = this.AllPatientList;
+        } else {
+          this.toastr.error(response.Message);
+        }
+        this.dataLoading = false;
+      },
+      (err) => {
+        this.toastr.error('Error while fetching records');
+        this.dataLoading = false;
       }
-      this.dataLoading = false
-    }, (err => {
-      this.toastr.error("Error while fetching records")
-      this.dataLoading = false;
-    }))
+    );
   }
 
-
-
-   filterPatientList(value: any) {
+  filterPatientList(value: any) {
     if (value) {
       const filterValue = value.toLowerCase();
-      this.PatientList = this.AllPatientList.filter((option: any) => option.SearchPatient.toLowerCase().includes(filterValue));
+      this.PatientList = this.AllPatientList.filter((option: any) =>
+        option.SearchPatient.toLowerCase().includes(filterValue)
+      );
     } else {
       this.PatientList = this.AllPatientList;
     }
@@ -156,10 +164,12 @@ sort(key: any) {
     this.OpdPatient = {};
   }
 
-afterPatientSelected(event: any) {
+  afterPatientSelected(event: any) {
     this.OpdPatient.PatientId = event.option.id;
     //this.CakeBooking.CustomerName = event.option.value;
-    var Patient = this.PatientList.find((x: any) => x.PatientId == this.OpdPatient.PatientId);
+    var Patient = this.PatientList.find(
+      (x: any) => x.PatientId == this.OpdPatient.PatientId
+    );
     this.OpdPatient.UHIDNo = Patient.UHIDNo;
     this.OpdPatient.MobileNo = Patient.MobileNo;
     this.OpdPatient.PatientNameauto = Patient.PatientName;
@@ -167,41 +177,31 @@ afterPatientSelected(event: any) {
     this.OpdPatient.Address = Patient.Address;
   }
 
-
-
-
-
-
-
-
   // service category selection
-afterServiceCategorySelected(event: any) {
-
-}
+  afterServiceCategorySelected(event: any) {}
   clearServie() {
     this.PatientList = this.AllPatientList;
     this.OpdPatient.PatientId = null;
     this.OpdPatient = {};
   }
 
-     filterServiceList(value: any) {
+  filterServiceList(value: any) {
     if (value) {
       const filterValue = value.toLowerCase();
-      this.PatientList = this.AllPatientList.filter((option: any) => option.SearchPatient.toLowerCase().includes(filterValue));
+      this.PatientList = this.AllPatientList.filter((option: any) =>
+        option.SearchPatient.toLowerCase().includes(filterValue)
+      );
     } else {
       this.PatientList = this.AllPatientList;
     }
     this.OpdPatient.PatientId = 0;
   }
 
-
-  
   serviceSubcategoryList: any[] = [];
   AllserviceSubcategoryList: any[] = [];
   servicecategoryList: any[] = [];
 
-
-    changeCategory() {
+  changeCategory() {
     const selectedId = Number(this.ServiceDetail.ServiceCategoryId);
     this.serviceSubcategoryList = this.AllserviceSubcategoryList.filter(
       (x) => Number(x.ServiceCategoryId) === selectedId
@@ -209,7 +209,7 @@ afterServiceCategorySelected(event: any) {
     this.ServiceDetail.ServiceSubCategoryId = null;
   }
 
-    getservicecategoryList() {
+  getservicecategoryList() {
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify({})).toString(),
     };
@@ -232,7 +232,7 @@ afterServiceCategorySelected(event: any) {
     );
   }
 
-    getserviceSubcategoryList() {
+  getserviceSubcategoryList() {
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify({})).toString(),
     };
@@ -254,90 +254,119 @@ afterServiceCategorySelected(event: any) {
       }
     );
   }
-  ServiceChargeList: any[]=[];
+  ServiceChargeList: any[] = [];
   getServiceChargeList() {
-  const obj: RequestModel = {
-    request: this.localService.encrypt(JSON.stringify({})).toString(),
-  };
+    const obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify({})).toString(),
+    };
 
-  this.dataLoading = true;
-  this.service.getServiceChargeList(obj).subscribe(
-    (r1) => {
-      const response = r1 as any;
+    this.dataLoading = true;
+    this.service.getServiceChargeList(obj).subscribe(
+      (r1) => {
+        const response = r1 as any;
 
-      if (response.Message == ConstantData.SuccessMessage) {
-        this.ServiceChargeList = response.serviceChargeList || [];
-       
-      } else {
-        this.toastr.error(response.Message);
+        if (response.Message == ConstantData.SuccessMessage) {
+          this.ServiceChargeList = response.serviceChargeList || [];
+        } else {
+          this.toastr.error(response.Message);
+        }
+
+        this.dataLoading = false;
+      },
+      (err) => {
+        this.toastr.error('Error while fetching ServiceCharge records');
+        this.dataLoading = false;
       }
+    );
+  }
+  onServiceSubCategoryChange(selectedSubCategoryId: any) {
+    const selectedCategory = this.servicecategoryList.find(
+      (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
+    );
 
-      this.dataLoading = false;
-    },
-    (err) => {
-      this.toastr.error('Error while fetching ServiceCharge records');
-      this.dataLoading = false;
+    const selectedSubCategory = this.serviceSubcategoryList.find(
+      (x) => x.ServiceSubCategoryId === selectedSubCategoryId
+    );
+
+    const matchedCharge = this.ServiceChargeList.find(
+      (charge) =>
+        charge.ServiceCategoryName === selectedCategory?.ServiceCategoryName &&
+        charge.ServiceSubCategoryName ===
+          selectedSubCategory?.ServiceSubCategoryName
+    );
+
+    if (matchedCharge) {
+      this.ServiceDetail.ServiceChargeAmount =
+        matchedCharge.ServiceChargeAmount;
+    } else {
+      this.ServiceDetail.ServiceChargeAmount = 0;
     }
-  );
-}
-onServiceSubCategoryChange(selectedSubCategoryId: any) {
+
+    // Set default values first time
+    this.ServiceDetail.Quantity = 1;
+    this.ServiceDetail.Discount = 0;
+
+    // Calculate total immediately
+    this.calculateTotal();
+  }
+
+  // Recalculate total whenever needed
+  calculateTotal() {
+    const amount = Number(this.ServiceDetail.ServiceChargeAmount) || 0;
+    const qty = Number(this.ServiceDetail.Quantity) || 0;
+    const discount = Number(this.ServiceDetail.Discount) || 0;
+
+    const gross = amount * qty;
+    const total = gross - discount;
+
+    this.ServiceDetail.Total = total >= 0 ? total : 0;
+  }
+
+  ServiceDetailList: any[] = [];
+
+  addServiceDetail() {
+  console.log('Service Detail before adding:', this.ServiceDetail);
+
+  // ✅ Validation
+  if (
+    !this.ServiceDetail.ServiceCategoryId ||
+    !this.ServiceDetail.ServiceSubCategoryId
+  ) {
+    this.toastr.warning('Please select valid service');
+    return;
+  }
+
+  // ✅ Find and store category name
   const selectedCategory = this.servicecategoryList.find(
     (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
   );
 
+  // ✅ Find and store subcategory name
   const selectedSubCategory = this.serviceSubcategoryList.find(
-    (x) => x.ServiceSubCategoryId === selectedSubCategoryId
+    (x) => x.ServiceSubCategoryId === this.ServiceDetail.ServiceSubCategoryId
   );
 
-  const matchedCharge = this.ServiceChargeList.find(
-    (charge) =>
-      charge.ServiceCategoryName === selectedCategory?.ServiceCategoryName &&
-      charge.ServiceSubCategoryName === selectedSubCategory?.ServiceSubCategoryName
-  );
+  // ✅ Assign names before pushing
+  this.ServiceDetail.ServiceCategoryName = selectedCategory?.ServiceCategoryName || '';
+  this.ServiceDetail.ServiceSubCategoryName = selectedSubCategory?.ServiceSubCategoryName || '';
 
-  if (matchedCharge) {
-    this.ServiceDetail.ServiceChargeAmount = matchedCharge.ServiceChargeAmount;
-  } else {
-    this.ServiceDetail.ServiceChargeAmount = 0;
-  }
-
-  // Set default values first time
-  this.ServiceDetail.Quantity = 1;
-  this.ServiceDetail.Discount = 0;
-
-  // Calculate total immediately
-  this.calculateTotal();
-}
-
-// Recalculate total whenever needed
-calculateTotal() {
-  const amount = Number(this.ServiceDetail.ServiceChargeAmount) || 0;
-  const qty = Number(this.ServiceDetail.Quantity) || 0;
-  const discount = Number(this.ServiceDetail.Discount) || 0;
-
-  const gross = amount * qty;
-  const total = gross - discount;
-
-  this.ServiceDetail.Total = total >= 0 ? total : 0;
-}
-
-ServiceDetailList: any[] = [];
-addServiceDetail() {
-  // Simple validation
-  if (
-    !this.ServiceDetail.ServiceCategoryName ||
-    !this.ServiceDetail.ServiceSubCategoryName ||
-    this.ServiceDetail.ServiceChargeAmount <= 0
-  ) {
-    this.toastr.warning('Please select valid service and amount');
-    return;
-  }
-
-  // Push new row into table list
+  // ✅ Push full record into list
   this.ServiceDetailList.push({ ...this.ServiceDetail });
 
+  // ✅ Optional toast
+  this.toastr.success('Service added successfully!');
 
+  // ✅ Reset form for next entry
+  this.ServiceDetail = {
+    ServiceCategoryId: null,
+    ServiceCategoryName: '',
+    ServiceSubCategoryId: null,
+    ServiceSubCategoryName: '',
+    ServiceChargeAmount: 0,
+    Quantity: 1,
+    Discount: 0,
+    Total: 0
+  };
 }
-
 
 }
