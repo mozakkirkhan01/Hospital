@@ -63,8 +63,14 @@ export class ManageOpdComponent implements OnInit {
     this.changeCategory();
     this.getservicecategoryList();
     this.getserviceSubcategoryList();
+    this.ServiceDetail.Quantity=1;
+    this.ServiceDetail.Discount=0;
+    this.getServiceChargeList()
   }
-
+sort(key: any) {
+    this.sortKey = key;
+    this.reverse = !this.reverse;
+  }
   validiateMenu() {
     var obj: RequestModel = {
       request: this.localService
@@ -189,18 +195,18 @@ afterServiceCategorySelected(event: any) {
   }
 
 
-  servicecharge: any = {};
+  
   serviceSubcategoryList: any[] = [];
   AllserviceSubcategoryList: any[] = [];
   servicecategoryList: any[] = [];
 
 
     changeCategory() {
-    const selectedId = Number(this.servicecharge.ServiceCategoryId);
+    const selectedId = Number(this.ServiceDetail.ServiceCategoryId);
     this.serviceSubcategoryList = this.AllserviceSubcategoryList.filter(
       (x) => Number(x.ServiceCategoryId) === selectedId
     );
-    this.servicecharge.ServiceSubCategoryId = null;
+    this.ServiceDetail.ServiceSubCategoryId = null;
   }
 
     getservicecategoryList() {
@@ -248,7 +254,90 @@ afterServiceCategorySelected(event: any) {
       }
     );
   }
+  ServiceChargeList: any[]=[];
+  getServiceChargeList() {
+  const obj: RequestModel = {
+    request: this.localService.encrypt(JSON.stringify({})).toString(),
+  };
 
+  this.dataLoading = true;
+  this.service.getServiceChargeList(obj).subscribe(
+    (r1) => {
+      const response = r1 as any;
+
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.ServiceChargeList = response.serviceChargeList || [];
+       
+      } else {
+        this.toastr.error(response.Message);
+      }
+
+      this.dataLoading = false;
+    },
+    (err) => {
+      this.toastr.error('Error while fetching ServiceCharge records');
+      this.dataLoading = false;
+    }
+  );
+}
+onServiceSubCategoryChange(selectedSubCategoryId: any) {
+  const selectedCategory = this.servicecategoryList.find(
+    (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
+  );
+
+  const selectedSubCategory = this.serviceSubcategoryList.find(
+    (x) => x.ServiceSubCategoryId === selectedSubCategoryId
+  );
+
+  const matchedCharge = this.ServiceChargeList.find(
+    (charge) =>
+      charge.ServiceCategoryName === selectedCategory?.ServiceCategoryName &&
+      charge.ServiceSubCategoryName === selectedSubCategory?.ServiceSubCategoryName
+  );
+
+  if (matchedCharge) {
+    this.ServiceDetail.ServiceChargeAmount = matchedCharge.ServiceChargeAmount;
+  } else {
+    this.ServiceDetail.ServiceChargeAmount = 0;
+  }
+
+  // Set default values first time
+  this.ServiceDetail.Quantity = 1;
+  this.ServiceDetail.Discount = 0;
+
+  // Calculate total immediately
+  this.calculateTotal();
+}
+
+// Recalculate total whenever needed
+calculateTotal() {
+  const amount = Number(this.ServiceDetail.ServiceChargeAmount) || 0;
+  const qty = Number(this.ServiceDetail.Quantity) || 0;
+  const discount = Number(this.ServiceDetail.Discount) || 0;
+
+  const gross = amount * qty;
+  const total = gross - discount;
+
+  this.ServiceDetail.Total = total >= 0 ? total : 0;
+}
+
+ServiceDetailList: any[] = [];
+addServiceDetail() {
+  // Simple validation
+  if (
+    !this.ServiceDetail.ServiceCategoryName ||
+    !this.ServiceDetail.ServiceSubCategoryName ||
+    this.ServiceDetail.ServiceChargeAmount <= 0
+  ) {
+    this.toastr.warning('Please select valid service and amount');
+    return;
+  }
+
+  // Push new row into table list
+  this.ServiceDetailList.push({ ...this.ServiceDetail });
+
+
+}
 
 
 }

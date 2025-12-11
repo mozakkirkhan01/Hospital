@@ -147,10 +147,10 @@
                 <div class="row">
 
                    <mat-form-field appearance="outline"
-                                                class="col-md-4 mb-2 custom-mat-form-field">
-                                                <mat-label>Select Service Category</mat-label>
+                                                class="col-md-2 mb-2 custom-mat-form-field">
+                                                <mat-label>Service Category</mat-label>
                                                 <mat-select name="ServiceCategoryId" (selectionChange)="changeCategory()"
-                                                    [(ngModel)]="servicecharge.ServiceCategoryId" required>
+                                                    [(ngModel)]="ServiceDetail.ServiceCategoryId" required>
                                                     <mat-option [value]="status.ServiceCategoryId"
                                                         *ngFor="let status of servicecategoryList">{{status.ServiceCategoryName}}</mat-option>
                                                 </mat-select>
@@ -158,19 +158,35 @@
                                             </mat-form-field>
                                             
                                               <mat-form-field appearance="outline"
-                                                class="col-md-4 mb-2 custom-mat-form-field">
-                                                <mat-label>Select Service Sub Category</mat-label>
+                                                class="col-md-2 mb-2 custom-mat-form-field">
+                                                <mat-label>Service Sub-Category</mat-label>
                                                 <mat-select name="ServiceSubCategoryId"
-                                                    [(ngModel)]="servicecharge.ServiceSubCategoryId" required>
+                                                    [(ngModel)]="ServiceDetail.ServiceSubCategoryId" (selectionChange)="onServiceSubCategoryChange($event.value)" required>
                                                     <mat-option [value]="status.ServiceSubCategoryId"
                                                         *ngFor="let status of serviceSubcategoryList">{{status.ServiceSubCategoryName}}</mat-option>
                                                 </mat-select>
                                                 <mat-error>Required Field !!</mat-error>
                                           </mat-form-field>
 
-                                       
-                                          
-                                          
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Service Amount</mat-label>
+                    <input type="number" matInput #ServiceChargeAmount="ngModel" name="ServiceChargeAmount" [(ngModel)]="ServiceDetail.ServiceChargeAmount" readonly />
+                  </mat-form-field>          
+                     <mat-form-field appearance="outline" class="col-md-1 form-group">
+                    <mat-label>Qty.</mat-label>
+                    <input type="number" matInput #Quantity="ngModel" name="Quantity"  [(ngModel)]="ServiceDetail.Quantity" (ngModelChange)="calculateTotal()" min="1" autofocus required />
+                  </mat-form-field>                                 
+                           <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Discount</mat-label>
+                    <input type="number" matInput #Discount="ngModel" name="Discount" [(ngModel)]="ServiceDetail.Discount" (ngModelChange)="calculateTotal()" min="0" autofocus />
+                  </mat-form-field>                
+                                   <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Total</mat-label>
+                    <input type="number" matInput #Total="ngModel" name="Total" [(ngModel)]="ServiceDetail.Total" readonly />
+                  </mat-form-field>       
+                  
+                   <button mat-raised-button color="primary" class="col-md-1" (click)="addServiceDetail()">Add</button>
+                  
                   <!-- <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>Amount</mat-label>
                     <input matInput #ServiceChargeAmount="ngModel" name="Amount" [(ngModel)]="OpdPatient.Amount" readonly />
@@ -180,7 +196,32 @@
                 </div>
               </fieldset>
             </form>
-
+             <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th style="cursor:pointer;" (click)="sort('ServiceCategoryName')">Service Category</th>
+                                <th style="cursor:pointer;" (click)="sort('ServiceSubCategoryName')">Service Sub-Category</th>
+                                <th style="cursor:pointer;" (click)="sort('ServiceChargeAmount')">Amount</th>
+                                <th style="cursor:pointer;" (click)="sort('Quantity')">Quantity</th>
+                                <th style="cursor:pointer;" (click)="sort('Discount')">Discount</th>
+                                <th style="cursor:pointer;" (click)="sort('Total')">Total</th>
+                                <th *ngIf="action.CanDelete">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let item of ServiceDetailList |filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
+                                <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                <td>{{item.ServiceCategoryName}}</td>
+                                <td>{{item.ServiceSubCategoryName}}</td>
+                                <td>{{item.ServiceChargeAmount}}</td>
+                                <td>{{item.Quantity}}</td>
+                                <td>{{item.Discount}}</td>
+                                <td>{{item.Total}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
             <!-- <div class="text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
