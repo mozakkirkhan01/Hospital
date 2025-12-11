@@ -16,6 +16,8 @@ import {
   DocType,
   Status,
   BloodGroup,
+  PaymentMode,
+  PaymentType,
   // MaritalStatus,
 } from '../../utils/enum';
 
@@ -26,6 +28,7 @@ import {
 })
 export class ManageOpdComponent implements OnInit {
   OpdPatient: any = {};
+  Payment: any = {};
   ServiceDetail: any = {};
   isSubmitted = false;
   PageSize = ConstantData.PageSizes;
@@ -37,6 +40,9 @@ export class ManageOpdComponent implements OnInit {
   dataLoading: boolean = false;
   action: ActionModel = {} as ActionModel;
   StaffLogin: StaffLoginModel = {} as StaffLoginModel;
+  PaymentModeList = this.loadDataService.GetEnumList(PaymentMode);
+  PaymentTypeList = this.loadDataService.GetEnumList(PaymentType);
+
 
   // GenderList = this.loadDataService.GetEnumList(Gender);
   // BloodGroupList = this.loadDataService.GetEnumList(BloodGroup);
@@ -325,48 +331,49 @@ export class ManageOpdComponent implements OnInit {
   ServiceDetailList: any[] = [];
 
   addServiceDetail() {
-  console.log('Service Detail before adding:', this.ServiceDetail);
+    console.log('Service Detail before adding:', this.ServiceDetail);
 
-  // ✅ Validation
-  if (
-    !this.ServiceDetail.ServiceCategoryId ||
-    !this.ServiceDetail.ServiceSubCategoryId
-  ) {
-    this.toastr.warning('Please select valid service');
-    return;
+    // ✅ Validation
+    if (
+      !this.ServiceDetail.ServiceCategoryId ||
+      !this.ServiceDetail.ServiceSubCategoryId
+    ) {
+      this.toastr.warning('Please select valid service');
+      return;
+    }
+
+    // ✅ Find and store category name
+    const selectedCategory = this.servicecategoryList.find(
+      (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
+    );
+
+    // ✅ Find and store subcategory name
+    const selectedSubCategory = this.serviceSubcategoryList.find(
+      (x) => x.ServiceSubCategoryId === this.ServiceDetail.ServiceSubCategoryId
+    );
+
+    // ✅ Assign names before pushing
+    this.ServiceDetail.ServiceCategoryName =
+      selectedCategory?.ServiceCategoryName || '';
+    this.ServiceDetail.ServiceSubCategoryName =
+      selectedSubCategory?.ServiceSubCategoryName || '';
+
+    // ✅ Push full record into list
+    this.ServiceDetailList.push({ ...this.ServiceDetail });
+
+    // ✅ Optional toast
+    this.toastr.success('Service added successfully!');
+
+    // ✅ Reset form for next entry
+    this.ServiceDetail = {
+      ServiceCategoryId: null,
+      ServiceCategoryName: '',
+      ServiceSubCategoryId: null,
+      ServiceSubCategoryName: '',
+      ServiceChargeAmount: 0,
+      Quantity: 1,
+      Discount: 0,
+      Total: 0,
+    };
   }
-
-  // ✅ Find and store category name
-  const selectedCategory = this.servicecategoryList.find(
-    (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
-  );
-
-  // ✅ Find and store subcategory name
-  const selectedSubCategory = this.serviceSubcategoryList.find(
-    (x) => x.ServiceSubCategoryId === this.ServiceDetail.ServiceSubCategoryId
-  );
-
-  // ✅ Assign names before pushing
-  this.ServiceDetail.ServiceCategoryName = selectedCategory?.ServiceCategoryName || '';
-  this.ServiceDetail.ServiceSubCategoryName = selectedSubCategory?.ServiceSubCategoryName || '';
-
-  // ✅ Push full record into list
-  this.ServiceDetailList.push({ ...this.ServiceDetail });
-
-  // ✅ Optional toast
-  this.toastr.success('Service added successfully!');
-
-  // ✅ Reset form for next entry
-  this.ServiceDetail = {
-    ServiceCategoryId: null,
-    ServiceCategoryName: '',
-    ServiceSubCategoryId: null,
-    ServiceSubCategoryName: '',
-    ServiceChargeAmount: 0,
-    Quantity: 1,
-    Discount: 0,
-    Total: 0
-  };
-}
-
 }

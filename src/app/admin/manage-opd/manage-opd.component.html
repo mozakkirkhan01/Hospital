@@ -27,115 +27,46 @@
                 <legend>Patient Details</legend>
 
                 <div class="row">
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-4 form-group"
-                  >
-                    <mat-label
-                      >Search By Patient UHID No./Name/Mobile No.</mat-label
-                    >
-                    <input
-                      matInput
-                      #CustomerId="ngModel"
-                      name="PatientId"
-                      (ngModelChange)="filterPatientList($event)"
-                      placeholder="Search Patient UHID No./Name/Mobile No."
-                      [(ngModel)]="OpdPatient.PatientName"
-                      [matAutocomplete]="autoPatient"
-                      required
-                      autofocus
-                    />
-                    <mat-autocomplete
-                      #autoPatient="matAutocomplete"
-                      (optionSelected)="afterPatientSelected($event)"
-                    >
-                      <mat-option
-                        *ngFor="let option of PatientList"
-                        [id]="option.PatientId"
-                        [value]="option.PatientName"
-                        >{{ option.SearchPatient }}</mat-option
-                      >
+                  <mat-form-field appearance="outline" class="col-md-4 form-group">
+                    <mat-label>Search By Patient UHID No./Name/Mobile No.</mat-label>
+                    <input matInput #CustomerId="ngModel" name="PatientId" (ngModelChange)="filterPatientList($event)"
+                      placeholder="Search Patient UHID No./Name/Mobile No." [(ngModel)]="OpdPatient.PatientName"
+                      [matAutocomplete]="autoPatient" required autofocus />
+                    <mat-autocomplete #autoPatient="matAutocomplete" (optionSelected)="afterPatientSelected($event)">
+                      <mat-option *ngFor="let option of PatientList" [id]="option.PatientId"
+                        [value]="option.PatientName">{{ option.SearchPatient }}</mat-option>
                     </mat-autocomplete>
-                    <button
-                      mat-icon-button
-                      matSuffix
-                      *ngIf="OpdPatient.PatientName"
-                      color="primary"
-                      (click)="clearPatient()"
-                    >
+                    <button mat-icon-button matSuffix *ngIf="OpdPatient.PatientName" color="primary"
+                      (click)="clearPatient()">
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-error>Patient Name required !!</mat-error>
                   </mat-form-field>
 
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-2 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>UHID No.</mat-label>
-                    <input
-                      matInput
-                      #UHIDNo="ngModel"
-                      name="UHIDNo"
-                      [(ngModel)]="OpdPatient.UHIDNo"
-                      readonly
-                    />
+                    <input matInput #UHIDNo="ngModel" name="UHIDNo" [(ngModel)]="OpdPatient.UHIDNo" readonly />
                   </mat-form-field>
 
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-3 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-3 form-group">
                     <mat-label>Patient Name</mat-label>
-                    <input
-                      matInput
-                      #PatientNameauto="ngModel"
-                      name="PatientNameauto"
-                      [(ngModel)]="OpdPatient.PatientNameauto"
-                      readonly
-                    />
+                    <input matInput #PatientNameauto="ngModel" name="PatientNameauto"
+                      [(ngModel)]="OpdPatient.PatientNameauto" readonly />
                   </mat-form-field>
 
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-1 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-1 form-group">
                     <mat-label>Age</mat-label>
-                    <input
-                      matInput
-                      #Age="ngModel"
-                      name="Age"
-                      [(ngModel)]="OpdPatient.Age"
-                      readonly
-                    />
+                    <input matInput #Age="ngModel" name="Age" [(ngModel)]="OpdPatient.Age" readonly />
                   </mat-form-field>
 
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-2 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>Mobile No.</mat-label>
-                    <input
-                      matInput
-                      #MobileNo="ngModel"
-                      name="MobileNo"
-                      [(ngModel)]="OpdPatient.MobileNo"
-                      readonly
-                    />
+                    <input matInput #MobileNo="ngModel" name="MobileNo" [(ngModel)]="OpdPatient.MobileNo" readonly />
                   </mat-form-field>
 
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-3 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-3 form-group">
                     <mat-label>Address</mat-label>
-                    <input
-                      matInput
-                      #Address="ngModel"
-                      name="Address"
-                      [(ngModel)]="OpdPatient.Address"
-                      readonly
-                    />
+                    <input matInput #Address="ngModel" name="Address" [(ngModel)]="OpdPatient.Address" readonly />
                   </mat-form-field>
                 </div>
               </fieldset>
@@ -146,22 +77,11 @@
                 <legend>Service Details</legend>
                 <div class="row">
                   <!-- Service Category -->
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-2 mb-2 custom-mat-form-field"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-2 mb-2 custom-mat-form-field">
                     <mat-label>Service Category</mat-label>
-                    <mat-select
-                    #ServiceCategoreyId="ngModel"
-                      name="ServiceCategoryId"
-                      (selectionChange)="changeCategory()"
-                      [(ngModel)]="ServiceDetail.ServiceCategoryId"
-                      required
-                    >
-                      <mat-option
-                        *ngFor="let status of servicecategoryList"
-                        [value]="status.ServiceCategoryId"
-                      >
+                    <mat-select #ServiceCategoreyId="ngModel" name="ServiceCategoryId"
+                      (selectionChange)="changeCategory()" [(ngModel)]="ServiceDetail.ServiceCategoryId" required>
+                      <mat-option *ngFor="let status of servicecategoryList" [value]="status.ServiceCategoryId">
                         {{ status.ServiceCategoryName }}
                       </mat-option>
                     </mat-select>
@@ -169,97 +89,42 @@
                   </mat-form-field>
 
                   <!-- Service Sub-Category -->
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-2 mb-2 custom-mat-form-field"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-2 mb-2 custom-mat-form-field">
                     <mat-label>Service Sub-Category</mat-label>
-                    <mat-select
-                      name="ServiceSubCategoryId"
-                      [(ngModel)]="ServiceDetail.ServiceSubCategoryId"
+                    <mat-select name="ServiceSubCategoryId" [(ngModel)]="ServiceDetail.ServiceSubCategoryId"
                       (selectionChange)="
                         onServiceSubCategoryChange($event.value)
-                      "
-                      required
-                    >
-                      <mat-option
-                        *ngFor="let status of serviceSubcategoryList"
-                        [value]="status.ServiceSubCategoryId"
-                      >
+                      " required>
+                      <mat-option *ngFor="let status of serviceSubcategoryList" [value]="status.ServiceSubCategoryId">
                         {{ status.ServiceSubCategoryName }}
                       </mat-option>
                     </mat-select>
                     <mat-error>Required Field !!</mat-error>
                   </mat-form-field>
 
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-2 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>Service Amount</mat-label>
-                    <input
-                      type="number"
-                      matInput
-                      #ServiceChargeAmount="ngModel"
-                      name="ServiceChargeAmount"
-                      [(ngModel)]="ServiceDetail.ServiceChargeAmount"
-                      readonly
-                    />
+                    <input type="number" matInput #ServiceChargeAmount="ngModel" name="ServiceChargeAmount"
+                      [(ngModel)]="ServiceDetail.ServiceChargeAmount" readonly />
                   </mat-form-field>
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-1 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-1 form-group">
                     <mat-label>Qty.</mat-label>
-                    <input
-                      type="number"
-                      matInput
-                      #Quantity="ngModel"
-                      name="Quantity"
-                      [(ngModel)]="ServiceDetail.Quantity"
-                      (ngModelChange)="calculateTotal()"
-                      min="1"
-                      autofocus
-                      required
-                    />
+                    <input type="number" matInput #Quantity="ngModel" name="Quantity"
+                      [(ngModel)]="ServiceDetail.Quantity" (ngModelChange)="calculateTotal()" min="1" autofocus
+                      required />
                   </mat-form-field>
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-2 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>Discount</mat-label>
-                    <input
-                      type="number"
-                      matInput
-                      #Discount="ngModel"
-                      name="Discount"
-                      [(ngModel)]="ServiceDetail.Discount"
-                      (ngModelChange)="calculateTotal()"
-                      min="0"
-                      autofocus
-                    />
+                    <input type="number" matInput #Discount="ngModel" name="Discount"
+                      [(ngModel)]="ServiceDetail.Discount" (ngModelChange)="calculateTotal()" min="0" autofocus />
                   </mat-form-field>
-                  <mat-form-field
-                    appearance="outline"
-                    class="col-md-2 form-group"
-                  >
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>Total</mat-label>
-                    <input
-                      type="number"
-                      matInput
-                      #Total="ngModel"
-                      name="Total"
-                      [(ngModel)]="ServiceDetail.Total"
-                      readonly
-                    />
+                    <input type="number" matInput #Total="ngModel" name="Total" [(ngModel)]="ServiceDetail.Total"
+                      readonly />
                   </mat-form-field>
 
-                  <button
-                    mat-raised-button
-                    color="primary"
-                    class="col-md-1"
-                    (click)="addServiceDetail()"
-                  >
+                  <button mat-raised-button color="primary" class="col-md-1" (click)="addServiceDetail()">
                     Add
                   </button>
 
@@ -274,22 +139,13 @@
               <thead>
                 <tr>
                   <th>S.No</th>
-                  <th
-                    style="cursor: pointer"
-                    (click)="sort('ServiceCategoryName')"
-                  >
+                  <th style="cursor: pointer" (click)="sort('ServiceCategoryName')">
                     Service Category
                   </th>
-                  <th
-                    style="cursor: pointer"
-                    (click)="sort('ServiceSubCategoryName')"
-                  >
+                  <th style="cursor: pointer" (click)="sort('ServiceSubCategoryName')">
                     Service Sub-Category
                   </th>
-                  <th
-                    style="cursor: pointer"
-                    (click)="sort('ServiceChargeAmount')"
-                  >
+                  <th style="cursor: pointer" (click)="sort('ServiceChargeAmount')">
                     Amount
                   </th>
                   <th style="cursor: pointer" (click)="sort('Quantity')">
@@ -303,16 +159,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  *ngFor="
+                <tr *ngFor="
                     let item of ServiceDetailList
                       | filter : Search
                       | orderBy : sortKey : reverse
                       | paginate
                         : { itemsPerPage: itemPerPage, currentPage: p };
                     let i = index
-                  "
-                >
+                  ">
                   <td>{{ itemPerPage * (p - 1) + i + 1 }}</td>
                   <td>{{ item.ServiceCategoryName }}</td>
                   <td>{{ item.ServiceSubCategoryName }}</td>
@@ -323,6 +177,71 @@
                 </tr>
               </tbody>
             </table>
+            <br /><br /><br />
+
+            <form #formOpdPatient="ngForm" class="row g-3">
+              <fieldset class="patient-details">
+                <legend>Payment Details</legend>
+                <div class="row">
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Paid Amount</mat-label>
+                    <input type="number" matInput #ServiceChargeAmount="ngModel" name="ServiceChargeAmount"
+                      [(ngModel)]="Payment.Amount" />
+                  </mat-form-field>
+
+                  <!-- Payment Mode -->
+                  <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                    <mat-label>Payment-Mode </mat-label>
+                    <mat-select #PaymentMode="ngModel" name="PaymentMode" [(ngModel)]="Payment.PaymentMode">
+                      <mat-option [value]="PaymentMode.Key" *ngFor="let PaymentMode of PaymentModeList">{{
+                        PaymentMode.Value
+                        }}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Payment Mode is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+
+                  <!-- Payment Type -->
+                  <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                    <mat-label>Payment-Type </mat-label>
+                    <mat-select #PaymentType="ngModel" name="PaymentType" [(ngModel)]="Payment.BloodGroup">
+                      <mat-option [value]="PaymentType.Key" *ngFor="let PaymentType of PaymentTypeList">{{
+                        PaymentType.Value
+                        }}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Blood Group is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  
+                  <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                    <mat-label>Date</mat-label>
+                    <input matInput #PaymentDate="ngModel" name="PaymentDate" [(ngModel)]="Payment.Date" required
+                      [matDatepicker]="JoinDatePicker">
+                    <mat-datepicker-toggle matIconSuffix [for]="JoinDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #JoinDatePicker></mat-datepicker>
+                    <mat-error *ngIf="(PaymentDate.dirty  || PaymentDate.touched) || (PaymentDate.invalid && isSubmitted)">
+                      PaymentDate is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+
+
+
+                  <button mat-raised-button color="primary" class="col-md-1" (click)="addServiceDetail()">
+                    Add
+                  </button>
+
+                  <!-- <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Amount</mat-label>
+                    <input matInput #ServiceChargeAmount="ngModel" name="Amount" [(ngModel)]="OpdPatient.Amount" readonly />
+                  </mat-form-field> -->
+                </div>
+              </fieldset>
+            </form>
             <!-- <div class="text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
