@@ -80,12 +80,12 @@
                   <mat-form-field appearance="outline" class="col-md-2 mb-2 custom-mat-form-field">
                     <mat-label>Service Category</mat-label>
                     <mat-select #ServiceCategoreyId="ngModel" name="ServiceCategoryId"
-                      (selectionChange)="changeCategory()" [(ngModel)]="ServiceDetail.ServiceCategoryId" required>
+                      (selectionChange)="changeCategory()" [(ngModel)]="ServiceDetail.ServiceCategoryId">
                       <mat-option *ngFor="let status of servicecategoryList" [value]="status.ServiceCategoryId">
                         {{ status.ServiceCategoryName }}
                       </mat-option>
                     </mat-select>
-                    <mat-error>Required Field !!</mat-error>
+                    <!-- <mat-error>Required Field !!</mat-error> -->
                   </mat-form-field>
 
                   <!-- Service Sub-Category -->
@@ -94,12 +94,12 @@
                     <mat-select name="ServiceSubCategoryId" [(ngModel)]="ServiceDetail.ServiceSubCategoryId"
                       (selectionChange)="
                         onServiceSubCategoryChange($event.value)
-                      " required>
+                      ">
                       <mat-option *ngFor="let status of serviceSubcategoryList" [value]="status.ServiceSubCategoryId">
                         {{ status.ServiceSubCategoryName }}
                       </mat-option>
                     </mat-select>
-                    <mat-error>Required Field !!</mat-error>
+                    <!-- <mat-error>Required Field !!</mat-error> -->
                   </mat-form-field>
 
                   <mat-form-field appearance="outline" class="col-md-2 form-group">
@@ -174,6 +174,11 @@
                   <td>{{ item.Quantity }}</td>
                   <td>{{ item.Discount }}</td>
                   <td>{{ item.Total }}</td>
+                  <td class="delete-cell">
+                    <button mat-icon-button color="warn" matTooltip="Delete Service" (click)="deleteServiceDetail(i)">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -183,47 +188,44 @@
               <fieldset class="patient-details">
                 <legend>Payment Details</legend>
                 <div class="row">
+
+
                   <mat-form-field appearance="outline" class="col-md-2 form-group">
-                    <mat-label>Paid Amount</mat-label>
-                    <input type="number" matInput #ServiceChargeAmount="ngModel" name="ServiceChargeAmount"
-                      [(ngModel)]="Payment.Amount" />
+                    <mat-label>Paid Amount </mat-label>
+                    <input type="number" matInput #Amount="ngModel" name="Amount" [(ngModel)]="Payment.Amount" min="0"
+                      autofocus />
                   </mat-form-field>
 
                   <!-- Payment Mode -->
                   <mat-form-field appearance="outline" class="col-sm-3 form-group">
-                    <mat-label>Payment-Mode </mat-label>
-                    <mat-select #PaymentMode="ngModel" name="PaymentMode" [(ngModel)]="Payment.PaymentMode">
-                      <mat-option [value]="PaymentMode.Key" *ngFor="let PaymentMode of PaymentModeList">{{
-                        PaymentMode.Value
-                        }}</mat-option>
+                    <mat-label>Payment Mode</mat-label>
+                    <mat-select name="PaymentMode" [(ngModel)]="Payment.PaymentMode">
+                      <mat-option *ngFor="let mode of PaymentModeList" [value]="mode.Key">
+                        {{ mode.Value }}
+                      </mat-option>
                     </mat-select>
-                    <mat-error>
-                      Payment Mode is <strong>required</strong>
-                    </mat-error>
                   </mat-form-field>
-
 
                   <!-- Payment Type -->
                   <mat-form-field appearance="outline" class="col-sm-3 form-group">
-                    <mat-label>Payment-Type </mat-label>
-                    <mat-select #PaymentType="ngModel" name="PaymentType" [(ngModel)]="Payment.BloodGroup">
-                      <mat-option [value]="PaymentType.Key" *ngFor="let PaymentType of PaymentTypeList">{{
-                        PaymentType.Value
-                        }}</mat-option>
+                    <mat-label>Payment Type</mat-label>
+                    <mat-select name="PaymentType" [(ngModel)]="Payment.PaymentType">
+                      <mat-option *ngFor="let type of PaymentTypeList" [value]="type.Key">
+                        {{ type.Value }}
+                      </mat-option>
                     </mat-select>
-                    <mat-error>
-                      Blood Group is <strong>required</strong>
-                    </mat-error>
                   </mat-form-field>
 
-                  
+
+
                   <mat-form-field appearance="outline" class="col-sm-3 form-group">
                     <mat-label>Date</mat-label>
-                    <input matInput #PaymentDate="ngModel" name="PaymentDate" [(ngModel)]="Payment.Date" required
+                    <input matInput #PaymentDate="ngModel" name="PaymentDate" [(ngModel)]="Payment.PaymentDate" required
                       [matDatepicker]="JoinDatePicker">
                     <mat-datepicker-toggle matIconSuffix [for]="JoinDatePicker"></mat-datepicker-toggle>
                     <mat-datepicker #JoinDatePicker></mat-datepicker>
-                    <mat-error *ngIf="(PaymentDate.dirty  || PaymentDate.touched) || (PaymentDate.invalid && isSubmitted)">
+                    <mat-error
+                      *ngIf="(PaymentDate.dirty  || PaymentDate.touched) || (PaymentDate.invalid && isSubmitted)">
                       PaymentDate is <strong>required</strong>
                     </mat-error>
                   </mat-form-field>
@@ -231,9 +233,44 @@
 
 
 
-                  <button mat-raised-button color="primary" class="col-md-1 blue-btn" (click)="addServiceDetail()">
+                  <button mat-raised-button color="primary" class="col-md-1 blue-btn" (click)="AddPaymentDetailList()">
                     Add
                   </button>
+
+                  <table class="table table-bordered table-hover center-table">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th style="cursor: pointer" (click)="sort('Amount')">Paid Amount</th>
+                        <th style="cursor: pointer" (click)="sort('PaymentMode')">Payment Mode</th>
+                        <th style="cursor: pointer" (click)="sort('PaymentType')">Payment Type</th>
+                        <th style="cursor: pointer" (click)="sort('PaymentDate')">Date</th>
+                        <th *ngIf="action.CanDelete">Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="
+                    let item of PaymentDetailList
+                      | filter : Search
+                      | orderBy : sortKey : reverse
+                      | paginate
+                        : { itemsPerPage: itemPerPage, currentPage: p };
+                    let i = index">
+
+                        <td>{{ itemPerPage * (p - 1) + i + 1 }}</td>
+                        <td>{{ item.Amount }}</td>
+                        <td>{{ getPaymentModeName(item.PaymentMode) }}</td>
+                        <td>{{ getPaymentTypeName(item.PaymentType) }}</td>
+                        <td>{{ item.PaymentDate | date:'dd/MM/yyyy' }}</td>
+                        <td>
+                          <button mat-icon-button class="del-btn" color="warn" (click)="deletePaymentDetail(i)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </td>
+
+                      </tr>
+                    </tbody>
+                  </table>
 
                   <!-- <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>Amount</mat-label>

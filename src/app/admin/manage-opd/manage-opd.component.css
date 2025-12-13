@@ -39,3 +39,19 @@
   margin-top: 5px;
 
 }
+.center-table th,
+.center-table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px 12px;
+}
+
+.center-table mat-icon {
+  vertical-align: middle;
+}
+.delete-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

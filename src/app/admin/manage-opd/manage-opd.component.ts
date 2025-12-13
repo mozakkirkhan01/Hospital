@@ -28,7 +28,6 @@ import {
 })
 export class ManageOpdComponent implements OnInit {
   OpdPatient: any = {};
-  Payment: any = {};
   ServiceDetail: any = {};
   isSubmitted = false;
   PageSize = ConstantData.PageSizes;
@@ -329,6 +328,7 @@ export class ManageOpdComponent implements OnInit {
   }
 
   ServiceDetailList: any[] = [];
+  PaymentDetailList: any[] = [];
 
   addServiceDetail() {
     console.log('Service Detail before adding:', this.ServiceDetail);
@@ -360,6 +360,7 @@ export class ManageOpdComponent implements OnInit {
 
     // ✅ Push full record into list
     this.ServiceDetailList.push({ ...this.ServiceDetail });
+    // console.log("serviceDetaillist",this.ServiceDetailList);
 
     // ✅ Optional toast
     this.toastr.success('Service added successfully!');
@@ -376,4 +377,72 @@ export class ManageOpdComponent implements OnInit {
       Total: 0,
     };
   }
+  deleteServiceDetail(index: number) {
+  if (confirm('Are you sure you want to delete this service record?')) {
+    this.ServiceDetailList.splice(index, 1);
+    this.toastr.info('Service deleted successfully');
+  }
+}
+
+
+
+Payment: any = {
+  Amount: 0,
+  PaymentMode: '',
+  PaymentType: '',
+  PaymentDate: new Date() // ✅ sets today’s date by default
+};
+
+
+
+AddPaymentDetailList() {
+  console.log('Payment Detail before adding:', this.Payment);
+
+  // ✅ Validation
+  if (
+    !this.Payment.Amount ||
+    !this.Payment.PaymentMode ||
+    !this.Payment.PaymentType ||
+    !this.Payment.PaymentDate
+  ) {
+    this.toastr.warning('Please fill all payment details before adding');
+    return;
+  }
+
+  // ✅ Push ENUM value record into list
+  this.PaymentDetailList.push({
+    Amount: this.Payment.Amount,
+    PaymentMode: this.Payment.PaymentMode,  // numeric enum value (e.g. 1, 2, 3)
+    PaymentType: this.Payment.PaymentType,  // numeric enum value (e.g. 1, 2)
+    PaymentDate: this.Payment.PaymentDate
+  });
+
+  console.log('PaymentDetailList:', this.PaymentDetailList);
+
+  this.toastr.success('Payment record added successfully!');
+
+  // ✅ Reset for next entry
+  this.Payment = {
+    Amount: 0,
+    PaymentMode: '',
+    PaymentType: '',
+    PaymentDate: new Date()
+  };
+}
+
+getPaymentModeName(modeId: number): string {
+  return this.PaymentModeList.find(x => x.Key === modeId)?.Value || '';
+}
+
+getPaymentTypeName(typeId: number): string {
+  return this.PaymentTypeList.find(x => x.Key === typeId)?.Value || '';
+}
+
+deletePaymentDetail(index: number) {
+  if (confirm('Are you sure you want to delete this payment record?')) {
+    this.PaymentDetailList.splice(index, 1);
+    this.toastr.info('Payment record deleted successfully');
+  }
+}
+
 }
