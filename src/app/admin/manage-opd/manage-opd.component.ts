@@ -18,6 +18,7 @@ import {
   BloodGroup,
   PaymentMode,
   PaymentType,
+  OpdType,
   // MaritalStatus,
 } from '../../utils/enum';
 
@@ -41,6 +42,9 @@ export class ManageOpdComponent implements OnInit {
   StaffLogin: StaffLoginModel = {} as StaffLoginModel;
   PaymentModeList = this.loadDataService.GetEnumList(PaymentMode);
   PaymentTypeList = this.loadDataService.GetEnumList(PaymentType);
+  OpdTypeList = this.loadDataService.GetEnumList(OpdType);
+  BloodGroupList = this.loadDataService.GetEnumList(BloodGroup);
+
 
 
   // GenderList = this.loadDataService.GetEnumList(Gender);
@@ -71,6 +75,7 @@ export class ManageOpdComponent implements OnInit {
     this.ServiceDetail.Quantity = 1;
     this.ServiceDetail.Discount = 0;
     this.getServiceChargeList();
+    this.OpdPatient.OpdDate = this.loadDataService.loadDateYMD(new Date());
   }
   sort(key: any) {
     this.sortKey = key;
@@ -180,6 +185,9 @@ export class ManageOpdComponent implements OnInit {
     this.OpdPatient.PatientNameauto = Patient.PatientName;
     this.OpdPatient.Age = Patient.Age;
     this.OpdPatient.Address = Patient.Address;
+    this.OpdPatient.AadharNo = Patient.AadharNo;
+    this.OpdPatient.BloodGroup = Patient.BloodGroup;
+    console.log(this.OpdPatient.BloodGroup);
   }
 
   // service category selection
@@ -330,61 +338,79 @@ export class ManageOpdComponent implements OnInit {
   ServiceDetailList: any[] = [];
   PaymentDetailList: any[] = [];
 
-  addServiceDetail() {
-    console.log('Service Detail before adding:', this.ServiceDetail);
-
-    // ✅ Validation
-    if (
-      !this.ServiceDetail.ServiceCategoryId ||
-      !this.ServiceDetail.ServiceSubCategoryId
-    ) {
-      this.toastr.warning('Please select valid service');
-      return;
-    }
-
-    // ✅ Find and store category name
-    const selectedCategory = this.servicecategoryList.find(
-      (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
-    );
-
-    // ✅ Find and store subcategory name
-    const selectedSubCategory = this.serviceSubcategoryList.find(
-      (x) => x.ServiceSubCategoryId === this.ServiceDetail.ServiceSubCategoryId
-    );
-
-    // ✅ Assign names before pushing
-    this.ServiceDetail.ServiceCategoryName =
-      selectedCategory?.ServiceCategoryName || '';
-    this.ServiceDetail.ServiceSubCategoryName =
-      selectedSubCategory?.ServiceSubCategoryName || '';
-
-    // ✅ Push full record into list
-    this.ServiceDetailList.push({ ...this.ServiceDetail });
-    // console.log("serviceDetaillist",this.ServiceDetailList);
-
-    // ✅ Optional toast
-    this.toastr.success('Service added successfully!');
-
-    // ✅ Reset form for next entry
-    this.ServiceDetail = {
-      ServiceCategoryId: null,
-      ServiceCategoryName: '',
-      ServiceSubCategoryId: null,
-      ServiceSubCategoryName: '',
-      ServiceChargeAmount: 0,
-      Quantity: 1,
-      Discount: 0,
-      Total: 0,
-    };
+addServiceDetail() {
+  if (!this.ServiceDetail.ServiceCategoryId || !this.ServiceDetail.ServiceSubCategoryId) {
+    this.toastr.warning('Please select valid service');
+    return;
   }
-  deleteServiceDetail(index: number) {
+
+  const selectedCategory = this.servicecategoryList.find(
+    (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
+  );
+  const selectedSubCategory = this.serviceSubcategoryList.find(
+    (x) => x.ServiceSubCategoryId === this.ServiceDetail.ServiceSubCategoryId
+  );
+
+  this.ServiceDetail.ServiceCategoryName = selectedCategory?.ServiceCategoryName || '';
+  this.ServiceDetail.ServiceSubCategoryName = selectedSubCategory?.ServiceSubCategoryName || '';
+
+  this.ServiceDetailList.push({ ...this.ServiceDetail });
+
+  this.toastr.success('Service added successfully!');
+  this.calculateTotals(); // ✅ Recalculate totals
+
+  this.ServiceDetail = {
+    ServiceCategoryId: null,
+    ServiceCategoryName: '',
+    ServiceSubCategoryId: null,
+    ServiceSubCategoryName: '',
+    ServiceChargeAmount: 0,
+    Quantity: 1,
+    Discount: 0,
+    Total: 0,
+  };
+}
+
+deleteServiceDetail(index: number) {
   if (confirm('Are you sure you want to delete this service record?')) {
     this.ServiceDetailList.splice(index, 1);
     this.toastr.info('Service deleted successfully');
+    this.calculateTotals();
   }
 }
 
+totalAmount: number = 0;
+totalDiscount: number = 0;
+grandTotal: number = 0;
+totalQuantity: number = 0;
 
+// Recalculate totals
+calculateTotals() {
+  this.totalAmount = this.ServiceDetailList.reduce(
+    (sum, item) => sum + Number(item.ServiceChargeAmount || 0),
+    0
+  );
+
+  this.totalDiscount = this.ServiceDetailList.reduce(
+    (sum, item) => sum + Number(item.Discount || 0),
+    0
+  );
+
+  this.grandTotal = this.ServiceDetailList.reduce(
+    (sum, item) => sum + Number(item.Total || 0),
+    0
+  );
+  this.totalQuantity = this.ServiceDetailList.reduce(
+    (sum, item) => sum + Number(item.Quantity || 0),
+    0
+  );
+
+  this.OpdPatient.LineTotal = this.totalAmount;
+  this.OpdPatient.TotalDiscount = this.totalDiscount;
+  this.OpdPatient.TotalQty = this.totalQuantity;
+  this.OpdPatient.GrandTotal = this.grandTotal;
+  this.Payment.Amount = this.grandTotal;
+}
 
 Payment: any = {
   Amount: 0,
@@ -410,12 +436,7 @@ AddPaymentDetailList() {
   }
 
   // ✅ Push ENUM value record into list
-  this.PaymentDetailList.push({
-    Amount: this.Payment.Amount,
-    PaymentMode: this.Payment.PaymentMode,  // numeric enum value (e.g. 1, 2, 3)
-    PaymentType: this.Payment.PaymentType,  // numeric enum value (e.g. 1, 2)
-    PaymentDate: this.Payment.PaymentDate
-  });
+  this.PaymentDetailList.push(this.Payment);
 
   console.log('PaymentDetailList:', this.PaymentDetailList);
 
@@ -437,6 +458,9 @@ getPaymentModeName(modeId: number): string {
 getPaymentTypeName(typeId: number): string {
   return this.PaymentTypeList.find(x => x.Key === typeId)?.Value || '';
 }
+GetOpdTypeList(OpdtypeId: number): string {
+  return this.OpdTypeList.find(x => x.Key === OpdtypeId)?.Value || '';
+}
 
 deletePaymentDetail(index: number) {
   if (confirm('Are you sure you want to delete this payment record?')) {
@@ -444,5 +468,25 @@ deletePaymentDetail(index: number) {
     this.toastr.info('Payment record deleted successfully');
   }
 }
+submitPaymentDetails() {
+  if (!this.PaymentDetailList.length) {
+    this.toastr.warning('Please add at least one payment record');
+    return;
+  }
+
+  const data={
+    GetOpdPatient : this.OpdPatient,
+    GetOpdDetail : this.ServiceDetailList,
+    GetPayment: this.PaymentDetailList
+  }
+
+
+  // api call 
+
+console.log(data);
+
+
+}
+
 
 }
