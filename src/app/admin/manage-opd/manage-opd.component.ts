@@ -422,34 +422,52 @@ Payment: any = {
 
 
 AddPaymentDetailList() {
-  console.log('Payment Detail before adding:', this.Payment);
-
-  // ✅ Validation
-  if (
-    !this.Payment.Amount ||
-    !this.Payment.PaymentMode ||
-    !this.Payment.PaymentType ||
-    !this.Payment.PaymentDate
-  ) {
-    this.toastr.warning('Please fill all payment details before adding');
+  // ✅ Basic validation
+  if (!this.Payment.Amount || this.Payment.Amount <= 0) {
+    this.toastr.warning('Please enter a valid Paid Amount');
+    return;
+  }
+  if (!this.Payment.PaymentMode || !this.Payment.PaymentType) {
+    this.toastr.warning('Please select Payment Mode and Type');
     return;
   }
 
-  // ✅ Push ENUM value record into list
-  this.PaymentDetailList.push(this.Payment);
+  // ✅ Push payment record into the list
+  this.PaymentDetailList.push({ ...this.Payment });
 
-  console.log('PaymentDetailList:', this.PaymentDetailList);
+  // ✅ Update totals
+  this.calculateTotalPaidAmount();
 
-  this.toastr.success('Payment record added successfully!');
+  // ✅ Toast message
+  this.toastr.success('Payment added successfully!');
 
-  // ✅ Reset for next entry
+  // ✅ Reset payment form for next entry
   this.Payment = {
     Amount: 0,
     PaymentMode: '',
     PaymentType: '',
-    PaymentDate: new Date()
+    PaymentDate: new Date(),
+    Remarks: this.Payment.Remarks // keep remarks if needed
   };
 }
+calculateTotalPaidAmount() {
+  // Calculate total paid amount
+  this.OpdPatient.TotalPaidAmount = this.PaymentDetailList.reduce(
+    (sum, item) => sum + Number(item.Amount || 0),
+    0
+  );
+
+  // Update dues
+  const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
+  this.OpdPatient.TotalDuesAmount = grandTotal - this.OpdPatient.TotalPaidAmount;
+
+  // Prevent negative dues
+  if (this.OpdPatient.TotalDuesAmount < 0) {
+    this.OpdPatient.TotalDuesAmount = 0;
+  }
+}
+
+
 
 getPaymentModeName(modeId: number): string {
   return this.PaymentModeList.find(x => x.Key === modeId)?.Value || '';
@@ -465,9 +483,11 @@ GetOpdTypeList(OpdtypeId: number): string {
 deletePaymentDetail(index: number) {
   if (confirm('Are you sure you want to delete this payment record?')) {
     this.PaymentDetailList.splice(index, 1);
-    this.toastr.info('Payment record deleted successfully');
+    this.toastr.info('Payment deleted successfully');
+    this.calculateTotalPaidAmount(); // Recalculate totals after delete
   }
 }
+
 submitPaymentDetails() {
   if (!this.PaymentDetailList.length) {
     this.toastr.warning('Please add at least one payment record');
