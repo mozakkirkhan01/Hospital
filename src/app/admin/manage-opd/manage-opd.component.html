@@ -68,6 +68,52 @@
                     <mat-label>Address</mat-label>
                     <input matInput #Address="ngModel" name="Address" [(ngModel)]="OpdPatient.Address" readonly />
                   </mat-form-field>
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Aadhar no </mat-label>
+                    <input matInput #AadharNo="ngModel" name="AadharNo" [(ngModel)]="OpdPatient.AadharNo" readonly />
+                  </mat-form-field>
+
+
+                  <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                    <mat-label>Blood Group</mat-label>
+                    <mat-select #BloodGroup="ngModel" name="BloodGroup" [(ngModel)]="OpdPatient.BloodGroup"
+                      disabled="true">
+                      <mat-option [value]="BloodGroup.Key"
+                        *ngFor="let BloodGroup of BloodGroupList">{{BloodGroup.Value}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Blood Group is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  
+                  <!-- Opd Type  -->
+                  <mat-form-field appearance="outline" class="col-sm-2 form-group">
+                    <mat-label>OPD Type</mat-label>
+                    <mat-select name="OpdType" [(ngModel)]="OpdPatient.OpdType" required #OpdType="ngModel">
+                      <mat-option *ngFor="let type of OpdTypeList" [value]="type.Key">
+                        {{ type.Value }}
+                      </mat-option>
+                    </mat-select>
+
+                    <!-- Validation message -->
+                    <mat-error *ngIf="OpdType.invalid && (OpdType.dirty || OpdType.touched)">
+                      OPD Type is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+
+                  <!-- Opd date -->
+                  <mat-form-field appearance="outline" class="col-sm-2 form-group">
+                    <mat-label>Opd Date</mat-label>
+                    <input matInput #OpdDate="ngModel" name="OpdDate" [(ngModel)]="OpdPatient.OpdDate" required
+                      [matDatepicker]="JoinDatePicker">
+                    <mat-datepicker-toggle matIconSuffix [for]="JoinDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #JoinDatePicker></mat-datepicker>
+                    <mat-error *ngIf="(OpdDate.dirty  || OpdDate.touched) || (OpdDate.invalid && isSubmitted)">
+                      Opd Date is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
                 </div>
               </fieldset>
             </form>
@@ -135,7 +181,7 @@
                 </div>
               </fieldset>
             </form>
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover center-table mb-4">
               <thead>
                 <tr>
                   <th>S.No</th>
@@ -175,18 +221,73 @@
                   <td>{{ item.Discount }}</td>
                   <td>{{ item.Total }}</td>
                   <td class="delete-cell">
-                    <button mat-icon-button color="warn" matTooltip="Delete Service" (click)="deleteServiceDetail(i)">
+                    <button color="warn" matTooltip="Delete Service" (click)="deleteServiceDetail(i)">
                       <mat-icon>delete_outline</mat-icon>
                     </button>
                   </td>
                 </tr>
+                <tr class="total-row" *ngIf="ServiceDetailList.length > 0">
+                  <td colspan="3" class="text-end"><strong>Grand Total</strong></td>
+                  <td><strong>{{ totalAmount }}</strong></td>
+                  <td><strong>{{ totalQuantity }} </strong></td>
+                  <td><strong>{{ totalDiscount }}</strong></td>
+                  <td><strong>{{ grandTotal }}</strong></td>
+                  <td></td>
+                </tr>
               </tbody>
             </table>
-            <br /><br /><br />
 
             <form #formOpdPatient="ngForm" class="row g-3">
               <fieldset class="patient-details">
                 <legend>Payment Details</legend>
+
+                <div class="row">
+
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label> Total Quantity</mat-label>
+                    <input type="number" matInput #TotalQty="ngModel" name="TotalQty" [(ngModel)]="OpdPatient.TotalQty"
+                      readonly />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Line Total</mat-label>
+                    <input type="number" matInput #LineTotal="ngModel" name="LineTotal"
+                      [(ngModel)]="OpdPatient.LineTotal" readonly />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Total Discount</mat-label>
+                    <input type="number" matInput #TotalDiscount="ngModel" name="TotalDiscount"
+                      [(ngModel)]="OpdPatient.TotalDiscount" readonly />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Grand Total</mat-label>
+                    <input type="number" matInput #GrandTotal="ngModel" name="GrandTotal"
+                      [(ngModel)]="OpdPatient.GrandTotal" readonly />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Dues Amount</mat-label>
+                    <input type="number" matInput #TotalDuesAmount="ngModel" name="TotalDuesAmount"
+                      [(ngModel)]="OpdPatient.TotalDuesAmount" readonly />
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="col-md-2 form-group">
+                    <mat-label>Total Paid Amount</mat-label>
+                    <input type="number" matInput #TotalPaidAmount="ngModel" name="TotalPaidAmount"
+                      [(ngModel)]="OpdPatient.TotalPaidAmount" readonly />
+                  </mat-form-field>
+
+
+                </div>
+              </fieldset>
+            </form>
+            <br>
+
+            <form #formOpdPatient="ngForm" class="row g-3">
+              <fieldset class="patient-details">
+                <legend>Payment Collection</legend>
                 <div class="row">
 
 
@@ -219,7 +320,7 @@
 
 
                   <mat-form-field appearance="outline" class="col-sm-3 form-group">
-                    <mat-label>Date</mat-label>
+                    <mat-label>Payment Date</mat-label>
                     <input matInput #PaymentDate="ngModel" name="PaymentDate" [(ngModel)]="Payment.PaymentDate" required
                       [matDatepicker]="JoinDatePicker">
                     <mat-datepicker-toggle matIconSuffix [for]="JoinDatePicker"></mat-datepicker-toggle>
@@ -244,7 +345,7 @@
                         <th style="cursor: pointer" (click)="sort('Amount')">Paid Amount</th>
                         <th style="cursor: pointer" (click)="sort('PaymentMode')">Payment Mode</th>
                         <th style="cursor: pointer" (click)="sort('PaymentType')">Payment Type</th>
-                        <th style="cursor: pointer" (click)="sort('PaymentDate')">Date</th>
+                        <th style="cursor: pointer" (click)="sort('PaymentDate')">Payment Date</th>
                         <th *ngIf="action.CanDelete">Delete</th>
                       </tr>
                     </thead>
@@ -271,6 +372,20 @@
                       </tr>
                     </tbody>
                   </table>
+
+                  <!-- Remarks Field -->
+                  <mat-form-field appearance="outline" class="col-sm-5 form-group">
+                    <mat-label>Remarks</mat-label>
+                    <textarea matInput name="Remarks" [(ngModel)]="Payment.Remarks"
+                      placeholder="Enter any notes or remarks here..." rows="2"></textarea>
+                  </mat-form-field>
+                  <br>
+
+                  <!-- Submit Button -->
+                  <button mat-raised-button color="accent" class="submit-btn" (click)="submitPaymentDetails()">
+                    <mat-icon>check_circle</mat-icon> Submit
+                  </button>
+
 
                   <!-- <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>Amount</mat-label>
