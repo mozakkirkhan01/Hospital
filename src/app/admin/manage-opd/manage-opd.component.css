@@ -13,7 +13,8 @@
 
 /* Perfect centered legend with only text background */
 .patient-details legend {
-  all: unset; /* reset browser default legend behavior */
+  all: unset;
+  /* reset browser default legend behavior */
   position: absolute;
   top: -0.6em;
   left: 7%;
@@ -22,36 +23,107 @@
   font-size: 14px;
   font-weight: 500;
   color: #4d4c4c;
-  background: #fff; /* only covers text area */
+  background: #fff;
+  /* only covers text area */
   line-height: 1;
-  white-space: nowrap; /* prevents stretching */
+  white-space: nowrap;
+  /* prevents stretching */
   z-index: 1;
   border-radius: 4px;
-  display: inline-block; /* ensures background wraps text only */
+  display: inline-block;
+  /* ensures background wraps text only */
 }
 
 .form-group {
   margin-bottom: 0rem;
 }
-.blue-btn{
+
+.blue-btn {
   color: #4d4c4c;
   height: 50px;
   margin-top: 5px;
 
 }
-.center-table th,
+
 .center-table td {
   text-align: center;
   vertical-align: middle;
-  padding: 8px 12px;
+  border: solid 1px #4d4c4c;
+  padding: 0;
+}
+
+.total-row {
+  background-color: #f7f9fc;
+  font-weight: 600;
+}
+
+.total-row td {
+  text-align: center;
+  padding: 5px 5px 5px 10px;
+
+
+}
+
+
+.text-end {
+  text-align: right !important;
+}
+
+/* .center-table tr td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 5px 5px 5px 10px;
+} */
+.center-table th {
+  background-color: rgb(236, 234, 234);
+  text-align: center;
+  border: solid 1px #4d4c4c;
+  vertical-align: middle;
+  padding: 5px 5px 5px 10px;
 }
 
 .center-table mat-icon {
   vertical-align: middle;
 }
-.delete-cell {
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.75rem;
+}
+
+.text-end {
+  text-align: right;
+}
+
+.submit-btn {
+  background-color: #4caf50;
+  color: white;
+  font-weight: 500;
+  width: 15rem;
+  height: 6rem;
+  padding: 12px 28px;
+  font-size: 16px;
+  border-radius: 8px;
+  margin-top: 5rem;
+  margin-bottom: 2rem;
+
+}
+
+.submit-btn:hover {
+  background-color: #43a047;
+  width: 15rem;
+  height: 6rem;
+  margin-top: 5rem;
+  margin-bottom: 2rem;
+
+}
+
+/* .delete-cell {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-}
+} */
