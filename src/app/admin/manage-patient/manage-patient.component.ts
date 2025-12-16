@@ -179,6 +179,22 @@ export class ManagePatientComponent {
     if (this.Patient.DateOofBirth)
       this.Patient.DateOfBirth = new Date(obj.DateOfBirth);
   }
+  calculateAge(dob: Date) {
+  if (!dob) return;
+
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  const dayDiff = today.getDate() - dob.getDate();
+
+  // If birthday hasn't happened yet this year, subtract one
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+
+  this.Patient.Age = age;
+}
+
 
 
 

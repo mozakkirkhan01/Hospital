@@ -5,16 +5,16 @@
         <div class="pagetitle dashboard col-sm-8">
             <h1>{{action.MenuTitle}}</h1>
             <nav>
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a routerLink="admin/admin-dashboard">Home</a></li>
-                <li class="breadcrumb-item">{{action.ParentMenuTitle}}</li>
-                <li class="breadcrumb-item active">{{action.MenuTitle}}</li>
-              </ol>
-            </nav>AllGenderList
-          </div>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a routerLink="admin/admin-dashboard">Home</a></li>
+                    <li class="breadcrumb-item">{{action.ParentMenuTitle}}</li>
+                    <li class="breadcrumb-item active">{{action.MenuTitle}}</li>
+                </ol>
+            </nav>
+        </div>
         <div class="col-sm-4">
-         
-             <button mat-raised-button color="primary" *ngIf="action.CanCreate" class="float-right"
+
+            <button mat-raised-button color="primary" *ngIf="action.CanCreate" class="float-right"
                 data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="resetForm()">New
                 Patient</button>
         </div>
@@ -75,7 +75,7 @@
                                 <td>{{item.AadharNo}}</td>
                                 <td *ngIf="action.CanEdit">
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop" (click)="editPatient(item)">
+                                        data-bs-target="#staticBackdrop" (click)="editPatient(item)">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </td>
@@ -114,8 +114,8 @@
                         Patient
                     </h1>
 
-                     <button type=" button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        (click)="resetForm()"></button> 
+                    <button type=" button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        (click)="resetForm()"></button>
                 </div>
                 <div class="modal-body">
                     <form #formPatient="ngForm" class="d-flex justify-content-evenly flex-wrap">
@@ -125,8 +125,8 @@
 
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
                                     <mat-label>Patient Name</mat-label>
-                                    <input matInput #PatientName="ngModel" name="PatientName" [(ngModel)]="Patient.PatientName"
-                                        required autofocus>
+                                    <input matInput #PatientName="ngModel" name="PatientName"
+                                        [(ngModel)]="Patient.PatientName" required autofocus>
                                     <mat-error
                                         *ngIf="(PatientName.dirty  || PatientName.touched) || (PatientName.invalid && isSubmitted)">
                                         Patient name is <strong>required</strong>
@@ -143,8 +143,8 @@
                                         Patient UHID  is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field> -->
-                                
-                                
+
+
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
                                     <mat-label>Gender</mat-label>
                                     <mat-select #Gender="ngModel" name="Gender" [(ngModel)]="Patient.Gender">
@@ -159,7 +159,8 @@
                                 <!-- BLOOD GROUP -->
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
                                     <mat-label>Blood Group</mat-label>
-                                    <mat-select #BloodGroup="ngModel" name="BloodGroup" [(ngModel)]="Patient.BloodGroup">
+                                    <mat-select #BloodGroup="ngModel" name="BloodGroup"
+                                        [(ngModel)]="Patient.BloodGroup">
                                         <mat-option [value]="BloodGroup.Key"
                                             *ngFor="let BloodGroup of BloodGroupList">{{BloodGroup.Value}}</mat-option>
                                     </mat-select>
@@ -170,33 +171,44 @@
                                 <!-- MARITAL STATUS  -->
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
                                     <mat-label> Marital Status</mat-label>
-                                    <mat-select #MaritalStatus="ngModel" name="MaritalStatus" [(ngModel)]="Patient.MaritalStatus">
+                                    <mat-select #MaritalStatus="ngModel" name="MaritalStatus"
+                                        [(ngModel)]="Patient.MaritalStatus">
                                         <mat-option [value]="MaritalStatus.Key"
                                             *ngFor="let MaritalStatus of MaritalStatusList">{{MaritalStatus.Value}}</mat-option>
                                     </mat-select>
                                     <mat-error>
-                                        Marital Status  is <strong>required</strong>
+                                        Marital Status is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>
-                                
-                                
-                                
+
+
+
+                                <!-- <mat-form-field appearance="outline" class="col-sm-3 form-group">
+                                    <mat-label>Date of Birth</mat-label>
+                                    <input matInput #DateOfBirth="ngModel" name="DateOfBirth"
+                                        [(ngModel)]="Patient.DateOfBirth" [matDatepicker]="DOBPicker">
+                                    <mat-datepicker-toggle matIconSuffix [for]="DOBPicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #DOBPicker></mat-datepicker>
+                                </mat-form-field> -->
+
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
                                     <mat-label>Date of Birth</mat-label>
-                                    <input matInput #DateOfBirth="ngModel" name="DateOfBirth" [(ngModel)]="Patient.DateOfBirth"
-                                    [matDatepicker]="DOBPicker">
+                                    <input matInput #DateOfBirth="ngModel" name="DateOfBirth"
+                                        [(ngModel)]="Patient.DateOfBirth" [matDatepicker]="DOBPicker"
+                                        (dateChange)="calculateAge($event.value)" 
+                                    >
                                     <mat-datepicker-toggle matIconSuffix [for]="DOBPicker"></mat-datepicker-toggle>
-                                    <mat-datepicker #DOBPicker></mat-datepicker>     
+                                    <mat-datepicker #DOBPicker></mat-datepicker>
                                 </mat-form-field>
+
 
                                 <!--Age-->
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
                                     <mat-label>Age</mat-label>
-                                    <input type="number" matInput #Age="ngModel" name="Age"
-                                        [(ngModel)]="Patient.Age" required autofocus>
+                                    <input type="number" matInput #Age="ngModel" name="Age" [(ngModel)]="Patient.Age"
+                                        required autofocus>
                                     <!--<mat-icon matSuffix>phone</mat-icon>-->
-                                    <mat-error
-                                        *ngIf="(Age.dirty  || Age.touched) || (Age.invalid && isSubmitted)">
+                                    <mat-error *ngIf="(Age.dirty  || Age.touched) || (Age.invalid && isSubmitted)">
                                         Age is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>
@@ -242,14 +254,13 @@
                                 <!--Address-->
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
                                     <mat-label>Address</mat-label>
-                                    <input matInput #Address="ngModel" name="Address"
-                                        [(ngModel)]="Patient.Address">
+                                    <input matInput #Address="ngModel" name="Address" [(ngModel)]="Patient.Address">
                                     <mat-error>
                                         Address is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>
-                            
-                            
+
+
                                 <!--join date-->
                                 <mat-form-field appearance="outline" class="col-sm-3 form-group">
                                     <mat-label>Date</mat-label>
@@ -283,10 +294,10 @@
                 </div>
                 <div class="modal-footer mt-2">
 
-                     <button type="button" mat-raised-button color="warn" class="me-2" data-bs-dismiss="modal"
+                    <button type="button" mat-raised-button color="warn" class="me-2" data-bs-dismiss="modal"
                         (click)="resetForm()">Cancel</button>
 
-                     <button mat-raised-button color="primary" (click)="savePatient()">{{Patient.PatientId >
+                    <button mat-raised-button color="primary" (click)="savePatient()">{{Patient.PatientId >
                         0 ? 'Update':'Submit'}}</button>
                 </div>
             </div>
