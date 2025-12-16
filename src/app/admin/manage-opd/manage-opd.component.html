@@ -86,7 +86,7 @@
                     </mat-error>
                   </mat-form-field>
 
-                  
+
                   <!-- Opd Type  -->
                   <mat-form-field appearance="outline" class="col-sm-2 form-group">
                     <mat-label>OPD Type</mat-label>
@@ -221,7 +221,10 @@
                   <td>{{ item.Discount }}</td>
                   <td>{{ item.Total }}</td>
                   <td class="delete-cell">
-                    <button color="warn" matTooltip="Delete Service" (click)="deleteServiceDetail(i)">
+                    <!-- <button color="warn" matTooltip="Delete Service" (click)="deleteServiceDetail(i)">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button> -->
+                    <button mat-icon-button class="del-btn" color="warn" (click)="deleteServiceDetail(i)">
                       <mat-icon>delete_outline</mat-icon>
                     </button>
                   </td>
@@ -236,6 +239,7 @@
                 </tr>
               </tbody>
             </table>
+            <br>
 
             <form #formOpdPatient="ngForm" class="row g-3">
               <fieldset class="patient-details">
