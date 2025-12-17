@@ -324,6 +324,21 @@ export class ManageOpdComponent implements OnInit {
     this.calculateTotal();
   }
 
+  setPaymentTypeAutomatically() {
+  const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
+  const paidAmount = Number(this.OpdPatient.TotalPaidAmount || 0);
+
+  const fullPaid = this.PaymentTypeList.find(x => x.Value.toLowerCase() === "full paid")?.Key;
+  const dues = this.PaymentTypeList.find(x => x.Value.toLowerCase() === "dues")?.Key;
+
+  if (grandTotal === paidAmount) {
+    this.Payment.PaymentType = fullPaid;
+  } else {
+    this.Payment.PaymentType = dues;
+  }
+}
+
+
   // Recalculate total whenever needed
   calculateTotal() {
     const amount = Number(this.ServiceDetail.ServiceChargeAmount) || 0;
@@ -334,6 +349,7 @@ export class ManageOpdComponent implements OnInit {
     const total = gross - discount;
 
     this.ServiceDetail.Total = total >= 0 ? total : 0;
+    this.setPaymentTypeAutomatically();
   }
 
   ServiceDetailList: any[] = [];
@@ -387,6 +403,7 @@ totalQuantity: number = 0;
 
 // Recalculate totals
 calculateTotals() {
+  // Calculate totals
   this.totalAmount = this.ServiceDetailList.reduce(
     (sum, item) => sum + Number(item.ServiceChargeAmount || 0),
     0
@@ -401,23 +418,45 @@ calculateTotals() {
     (sum, item) => sum + Number(item.Total || 0),
     0
   );
+
   this.totalQuantity = this.ServiceDetailList.reduce(
     (sum, item) => sum + Number(item.Quantity || 0),
     0
   );
 
+  // Assign totals to OPD object
   this.OpdPatient.LineTotal = this.totalAmount;
   this.OpdPatient.TotalDiscount = this.totalDiscount;
   this.OpdPatient.TotalQty = this.totalQuantity;
   this.OpdPatient.GrandTotal = this.grandTotal;
-  this.Payment.Amount = this.grandTotal;
+
+  // ---------------------------------------
+  // DO NOT RESET PAID OR DUES HERE!
+  // Just recalc dues based on existing payment list
+  // ---------------------------------------
+
+  const totalPaid = this.PaymentDetailList.reduce(
+    (sum, item) => sum + Number(item.Amount || 0),
+    0
+  );
+
+  this.OpdPatient.TotalPaidAmount = totalPaid;
+  this.OpdPatient.TotalDuesAmount = this.grandTotal - totalPaid;
+
+  if (this.OpdPatient.TotalDuesAmount < 0) {
+    this.OpdPatient.TotalDuesAmount = 0;
+  }
+
+  // Auto-fill next Payment.Amount = remaining dues
+  this.Payment.Amount = this.OpdPatient.TotalDuesAmount;
 }
+
 
 Payment: any = {
   Amount: 0,
   PaymentMode: '',
   PaymentType: '',
-  PaymentDate: new Date() // ✅ sets today’s date by default
+  PaymentDate: new Date() 
 };
 
 
@@ -450,6 +489,7 @@ AddPaymentDetailList() {
     PaymentDate: new Date(),
     Remarks: this.Payment.Remarks // keep remarks if needed
   };
+ 
 }
 calculateTotalPaidAmount() {
   // Calculate total paid amount
@@ -507,6 +547,52 @@ submitPaymentDetails() {
 console.log(data);
 
 }
+
+autoUpdatePaymentValues() {
+  const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
+
+  // Amount already paid from list
+  const paidFromList = this.PaymentDetailList.reduce(
+    (sum, item) => sum + Number(item.Amount || 0), 
+    0
+  );
+
+  const currentPaid = Number(this.Payment.Amount || 0);
+
+  // Remaining balance before typing
+  const duesBeforeTyping = grandTotal - paidFromList;
+
+  // ************ NEW RULE ************
+  // If user enters more than required, auto-correct it
+  if (currentPaid > duesBeforeTyping) {
+    this.Payment.Amount = duesBeforeTyping;  // Auto set balance amount
+  }
+
+  // RE-CALCULATE after correction
+  const correctedPaid = Number(this.Payment.Amount || 0);
+  const liveTotalPaid = paidFromList + correctedPaid;
+
+  // Update UI
+  this.OpdPatient.TotalPaidAmount = liveTotalPaid;
+  this.OpdPatient.TotalDuesAmount = grandTotal - liveTotalPaid;
+
+  if (this.OpdPatient.TotalDuesAmount < 0) {
+    this.OpdPatient.TotalDuesAmount = 0;
+  }
+
+  // Get PaymentType keys
+  const fullPaidKey = this.PaymentTypeList.find(x => x.Value === "Full Paid")?.Key;
+  const duesKey = this.PaymentTypeList.find(x => x.Value === "Dues")?.Key;
+
+  // Decide payment type
+  if (liveTotalPaid === grandTotal) {
+    this.Payment.PaymentType = fullPaidKey;
+  } else {
+    this.Payment.PaymentType = duesKey;
+  }
+}
+
+
 
 
 }
