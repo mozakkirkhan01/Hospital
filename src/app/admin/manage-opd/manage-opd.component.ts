@@ -76,6 +76,7 @@ export class ManageOpdComponent implements OnInit {
     this.ServiceDetail.Discount = 0;
     this.getServiceChargeList();
     this.OpdPatient.OpdDate = this.loadDataService.loadDateYMD(new Date());
+    this.OpdPatient.OpdType = 1;  // or whatever key corresponds to "New"
   }
   sort(key: any) {
     this.sortKey = key;
@@ -504,7 +505,6 @@ submitPaymentDetails() {
   // api call 
 
 console.log(data);
-
 
 }
 
