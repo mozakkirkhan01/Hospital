@@ -129,6 +129,12 @@ export class AppService {
       headers: this.headers,
       });
     }
+//opdDetails
+    saveOpd(obj: any) {
+  return this.http.post("api/Opd/saveOpd", obj);
+}
+
+    
 
   // Company
   getCompanyList(obj: any) {
