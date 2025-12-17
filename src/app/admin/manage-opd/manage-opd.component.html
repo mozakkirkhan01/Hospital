@@ -286,18 +286,16 @@
 
                 </div>
               </fieldset>
-            </form>
-            <br>
 
-            <form #formOpdPatient="ngForm" class="row g-3">
-              <fieldset class="patient-details">
+
+                <fieldset class="patient-details">
                 <legend>Payment Collection</legend>
                 <div class="row">
 
 
                   <mat-form-field appearance="outline" class="col-md-2 form-group">
                     <mat-label>Paid Amount </mat-label>
-                    <input type="number" matInput #Amount="ngModel" name="Amount" [(ngModel)]="Payment.Amount" min="0"
+                    <input type="number" matInput #Amount="ngModel" name="Amount" [(ngModel)]="Payment.Amount" min="0" (ngModelChange)="autoUpdatePaymentValues()"
                       autofocus />
                   </mat-form-field>
 
@@ -398,6 +396,7 @@
                 </div>
               </fieldset>
             </form>
+           
             <!-- <div class="text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
