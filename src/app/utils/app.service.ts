@@ -129,10 +129,16 @@ export class AppService {
       headers: this.headers,
       });
     }
-//opdDetails
-    saveOpd(obj: any) {
-  return this.http.post("api/Opd/saveOpd", obj);
-}
+
+    
+    //opdDetails
+    saveOpd(obj:any)
+    {
+      return this.http.post(this.apiUrl + 'Opd/saveOpd', obj, {
+      headers: this.headers,
+      });
+    }
+
 
     
 
