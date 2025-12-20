@@ -378,13 +378,13 @@
                   <!-- Remarks Field -->
                   <mat-form-field appearance="outline" class="col-sm-5 form-group">
                     <mat-label>Remarks</mat-label>
-                    <textarea matInput name="Remarks" [(ngModel)]="Payment.Remarks"
+                    <textarea matInput name="Remarks" [(ngModel)]="OpdPatient.Remarks"
                       placeholder="Enter any notes or remarks here..." rows="2"></textarea>
                   </mat-form-field>
                   <br>
 
                   <!-- Submit Button -->
-                  <button mat-raised-button color="accent" class="submit-btn" (click)="submitPaymentDetails()">
+                  <button mat-raised-button color="accent" class="submit-btn" (click)="saveOpd()">
                     <mat-icon>check_circle</mat-icon> Submit
                   </button>
 
