@@ -44,7 +44,7 @@ export class ManageOpdComponent implements OnInit {
   PaymentTypeList = this.loadDataService.GetEnumList(PaymentType);
   OpdTypeList = this.loadDataService.GetEnumList(OpdType);
   BloodGroupList = this.loadDataService.GetEnumList(BloodGroup);
-
+  userDetail: any = {};
 
 
   // GenderList = this.loadDataService.GetEnumList(Gender);
@@ -63,7 +63,7 @@ export class ManageOpdComponent implements OnInit {
     private loadDataService: LoadDataService,
     private localService: LocalService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.StaffLogin = this.localService.getEmployeeDetail();
@@ -169,10 +169,17 @@ export class ManageOpdComponent implements OnInit {
     }
     this.OpdPatient.PatientId = 0;
   }
+  // clearPatient() {
+  //   this.PatientList = this.AllPatientList;
+  //   this.OpdPatient.PatientId = null;
+  //   this.OpdPatient = {};
+  // }
   clearPatient() {
-    this.PatientList = this.AllPatientList;
+    this.OpdPatient.PatientName = '';
     this.OpdPatient.PatientId = null;
-    this.OpdPatient = {};
+
+    // Restore full list
+    this.PatientList = this.AllPatientList.slice();
   }
 
   afterPatientSelected(event: any) {
@@ -192,7 +199,7 @@ export class ManageOpdComponent implements OnInit {
   }
 
   // service category selection
-  afterServiceCategorySelected(event: any) {}
+  afterServiceCategorySelected(event: any) { }
   clearServie() {
     this.PatientList = this.AllPatientList;
     this.OpdPatient.PatientId = null;
@@ -306,7 +313,7 @@ export class ManageOpdComponent implements OnInit {
       (charge) =>
         charge.ServiceCategoryName === selectedCategory?.ServiceCategoryName &&
         charge.ServiceSubCategoryName ===
-          selectedSubCategory?.ServiceSubCategoryName
+        selectedSubCategory?.ServiceSubCategoryName
     );
 
     if (matchedCharge) {
@@ -325,18 +332,18 @@ export class ManageOpdComponent implements OnInit {
   }
 
   setPaymentTypeAutomatically() {
-  const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
-  const paidAmount = Number(this.OpdPatient.TotalPaidAmount || 0);
+    const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
+    const paidAmount = Number(this.OpdPatient.TotalPaidAmount || 0);
 
-  const fullPaid = this.PaymentTypeList.find(x => x.Value.toLowerCase() === "full paid")?.Key;
-  const dues = this.PaymentTypeList.find(x => x.Value.toLowerCase() === "dues")?.Key;
+    const fullPaid = this.PaymentTypeList.find(x => x.Value.toLowerCase() === "full paid")?.Key;
+    const dues = this.PaymentTypeList.find(x => x.Value.toLowerCase() === "dues")?.Key;
 
-  if (grandTotal === paidAmount) {
-    this.Payment.PaymentType = fullPaid;
-  } else {
-    this.Payment.PaymentType = dues;
+    if (grandTotal === paidAmount) {
+      this.Payment.PaymentType = fullPaid;
+    } else {
+      this.Payment.PaymentType = dues;
+    }
   }
-}
 
 
   // Recalculate total whenever needed
@@ -355,244 +362,301 @@ export class ManageOpdComponent implements OnInit {
   ServiceDetailList: any[] = [];
   PaymentDetailList: any[] = [];
 
-addServiceDetail() {
-  if (!this.ServiceDetail.ServiceCategoryId || !this.ServiceDetail.ServiceSubCategoryId) {
-    this.toastr.warning('Please select valid service');
-    return;
+  addServiceDetail() {
+    if (!this.ServiceDetail.ServiceCategoryId || !this.ServiceDetail.ServiceSubCategoryId) {
+      this.toastr.warning('Please select valid service');
+      return;
+    }
+
+    const selectedCategory = this.servicecategoryList.find(
+      (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
+    );
+    const selectedSubCategory = this.serviceSubcategoryList.find(
+      (x) => x.ServiceSubCategoryId === this.ServiceDetail.ServiceSubCategoryId
+    );
+
+    this.ServiceDetail.ServiceCategoryName = selectedCategory?.ServiceCategoryName || '';
+    this.ServiceDetail.ServiceSubCategoryName = selectedSubCategory?.ServiceSubCategoryName || '';
+
+    this.ServiceDetailList.push({ ...this.ServiceDetail });
+
+    this.toastr.success('Service added successfully!');
+    this.calculateTotals(); // ✅ Recalculate totals
+
+    this.ServiceDetail = {
+      ServiceCategoryId: null,
+      ServiceCategoryName: '',
+      ServiceSubCategoryId: null,
+      ServiceSubCategoryName: '',
+      ServiceChargeAmount: 0,
+      Quantity: 1,
+      Discount: 0,
+      Total: 0,
+    };
   }
 
-  const selectedCategory = this.servicecategoryList.find(
-    (x) => x.ServiceCategoryId === this.ServiceDetail.ServiceCategoryId
-  );
-  const selectedSubCategory = this.serviceSubcategoryList.find(
-    (x) => x.ServiceSubCategoryId === this.ServiceDetail.ServiceSubCategoryId
-  );
-
-  this.ServiceDetail.ServiceCategoryName = selectedCategory?.ServiceCategoryName || '';
-  this.ServiceDetail.ServiceSubCategoryName = selectedSubCategory?.ServiceSubCategoryName || '';
-
-  this.ServiceDetailList.push({ ...this.ServiceDetail });
-
-  this.toastr.success('Service added successfully!');
-  this.calculateTotals(); // ✅ Recalculate totals
-
-  this.ServiceDetail = {
-    ServiceCategoryId: null,
-    ServiceCategoryName: '',
-    ServiceSubCategoryId: null,
-    ServiceSubCategoryName: '',
-    ServiceChargeAmount: 0,
-    Quantity: 1,
-    Discount: 0,
-    Total: 0,
-  };
-}
-
-deleteServiceDetail(index: number) {
-  if (confirm('Are you sure you want to delete this service record?')) {
-    this.ServiceDetailList.splice(index, 1);
-    this.toastr.info('Service deleted successfully');
-    this.calculateTotals();
-  }
-}
-
-totalAmount: number = 0;
-totalDiscount: number = 0;
-grandTotal: number = 0;
-totalQuantity: number = 0;
-
-// Recalculate totals
-calculateTotals() {
-  // Calculate totals
-  this.totalAmount = this.ServiceDetailList.reduce(
-    (sum, item) => sum + Number(item.ServiceChargeAmount || 0),
-    0
-  );
-
-  this.totalDiscount = this.ServiceDetailList.reduce(
-    (sum, item) => sum + Number(item.Discount || 0),
-    0
-  );
-
-  this.grandTotal = this.ServiceDetailList.reduce(
-    (sum, item) => sum + Number(item.Total || 0),
-    0
-  );
-
-  this.totalQuantity = this.ServiceDetailList.reduce(
-    (sum, item) => sum + Number(item.Quantity || 0),
-    0
-  );
-
-  // Assign totals to OPD object
-  this.OpdPatient.LineTotal = this.totalAmount;
-  this.OpdPatient.TotalDiscount = this.totalDiscount;
-  this.OpdPatient.TotalQty = this.totalQuantity;
-  this.OpdPatient.GrandTotal = this.grandTotal;
-
-  // ---------------------------------------
-  // DO NOT RESET PAID OR DUES HERE!
-  // Just recalc dues based on existing payment list
-  // ---------------------------------------
-
-  const totalPaid = this.PaymentDetailList.reduce(
-    (sum, item) => sum + Number(item.Amount || 0),
-    0
-  );
-
-  this.OpdPatient.TotalPaidAmount = totalPaid;
-  this.OpdPatient.TotalDuesAmount = this.grandTotal - totalPaid;
-
-  if (this.OpdPatient.TotalDuesAmount < 0) {
-    this.OpdPatient.TotalDuesAmount = 0;
+  deleteServiceDetail(index: number) {
+    if (confirm('Are you sure you want to delete this service record?')) {
+      this.ServiceDetailList.splice(index, 1);
+      this.toastr.info('Service deleted successfully');
+      this.calculateTotals();
+    }
   }
 
-  // Auto-fill next Payment.Amount = remaining dues
-  this.Payment.Amount = this.OpdPatient.TotalDuesAmount;
-}
+  totalAmount: number = 0;
+  totalDiscount: number = 0;
+  grandTotal: number = 0;
+  totalQuantity: number = 0;
 
+  // Recalculate totals
+  calculateTotals() {
+    // Calculate totals
+    this.totalAmount = this.ServiceDetailList.reduce(
+      (sum, item) => sum + Number(item.ServiceChargeAmount || 0),
+      0
+    );
 
-Payment: any = {
-  Amount: 0,
-  PaymentMode: '',
-  PaymentType: '',
-  PaymentDate: new Date() 
-};
+    this.totalDiscount = this.ServiceDetailList.reduce(
+      (sum, item) => sum + Number(item.Discount || 0),
+      0
+    );
 
+    this.grandTotal = this.ServiceDetailList.reduce(
+      (sum, item) => sum + Number(item.Total || 0),
+      0
+    );
 
+    this.totalQuantity = this.ServiceDetailList.reduce(
+      (sum, item) => sum + Number(item.Quantity || 0),
+      0
+    );
 
-AddPaymentDetailList() {
-  // ✅ Basic validation
-  if (!this.Payment.Amount || this.Payment.Amount <= 0) {
-    this.toastr.warning('Please enter a valid Paid Amount');
-    return;
+    // Assign totals to OPD object
+    this.OpdPatient.LineTotal = this.totalAmount;
+    this.OpdPatient.TotalDiscount = this.totalDiscount;
+    this.OpdPatient.TotalQty = this.totalQuantity;
+    this.OpdPatient.GrandTotal = this.grandTotal;
+
+    // ---------------------------------------
+    // DO NOT RESET PAID OR DUES HERE!
+    // Just recalc dues based on existing payment list
+    // ---------------------------------------
+
+    const totalPaid = this.PaymentDetailList.reduce(
+      (sum, item) => sum + Number(item.Amount || 0),
+      0
+    );
+
+    this.OpdPatient.TotalPaidAmount = totalPaid;
+    this.OpdPatient.TotalDuesAmount = this.grandTotal - totalPaid;
+
+    if (this.OpdPatient.TotalDuesAmount < 0) {
+      this.OpdPatient.TotalDuesAmount = 0;
+    }
+
+    // Auto-fill next Payment.Amount = remaining dues
+    this.Payment.Amount = this.OpdPatient.TotalDuesAmount;
   }
-  if (!this.Payment.PaymentMode || !this.Payment.PaymentType) {
-    this.toastr.warning('Please select Payment Mode and Type');
-    return;
-  }
 
-  // ✅ Push payment record into the list
-  this.PaymentDetailList.push({ ...this.Payment });
 
-  // ✅ Update totals
-  this.calculateTotalPaidAmount();
-
-  // ✅ Toast message
-  this.toastr.success('Payment added successfully!');
-
-  // ✅ Reset payment form for next entry
-  this.Payment = {
+  Payment: any = {
     Amount: 0,
     PaymentMode: '',
     PaymentType: '',
-    PaymentDate: new Date(),
-    Remarks: this.Payment.Remarks // keep remarks if needed
+    PaymentDate: new Date()
   };
- 
-}
-calculateTotalPaidAmount() {
-  // Calculate total paid amount
-  this.OpdPatient.TotalPaidAmount = this.PaymentDetailList.reduce(
-    (sum, item) => sum + Number(item.Amount || 0),
-    0
-  );
 
-  // Update dues
-  const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
-  this.OpdPatient.TotalDuesAmount = grandTotal - this.OpdPatient.TotalPaidAmount;
 
-  // Prevent negative dues
-  if (this.OpdPatient.TotalDuesAmount < 0) {
-    this.OpdPatient.TotalDuesAmount = 0;
+
+  AddPaymentDetailList() {
+    // ✅ Basic validation
+    if (!this.Payment.Amount || this.Payment.Amount <= 0) {
+      this.toastr.warning('Please enter a valid Paid Amount');
+      return;
+    }
+    if (!this.Payment.PaymentMode || !this.Payment.PaymentType) {
+      this.toastr.warning('Please select Payment Mode and Type');
+      return;
+    }
+
+    // ✅ Push payment record into the list
+    this.PaymentDetailList.push({ ...this.Payment });
+
+    // ✅ Update totals
+    this.calculateTotalPaidAmount();
+
+    // ✅ Toast message
+    this.toastr.success('Payment added successfully!');
+
+    // ✅ Reset payment form for next entry
+    this.Payment = {
+      Amount: 0,
+      PaymentMode: '',
+      PaymentType: '',
+      PaymentDate: new Date(),
+      Remarks: this.Payment.Remarks // keep remarks if needed
+    };
+    this.calculateTotals(); // ✅ Recalculate totals
+    // this.autoUpdatePaymentValues();
   }
-}
+  calculateTotalPaidAmount() {
+    // Calculate total paid amount
+    this.OpdPatient.TotalPaidAmount = this.PaymentDetailList.reduce(
+      (sum, item) => sum + Number(item.Amount || 0),
+      0
+    );
 
+    // Update dues
+    const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
+    this.OpdPatient.TotalDuesAmount = grandTotal - this.OpdPatient.TotalPaidAmount;
 
-
-getPaymentModeName(modeId: number): string {
-  return this.PaymentModeList.find(x => x.Key === modeId)?.Value || '';
-}
-
-getPaymentTypeName(typeId: number): string {
-  return this.PaymentTypeList.find(x => x.Key === typeId)?.Value || '';
-}
-GetOpdTypeList(OpdtypeId: number): string {
-  return this.OpdTypeList.find(x => x.Key === OpdtypeId)?.Value || '';
-}
-
-deletePaymentDetail(index: number) {
-  if (confirm('Are you sure you want to delete this payment record?')) {
-    this.PaymentDetailList.splice(index, 1);
-    this.toastr.info('Payment deleted successfully');
-    this.calculateTotalPaidAmount(); // Recalculate totals after delete
-  }
-}
-
-submitPaymentDetails() {
-  if (!this.PaymentDetailList.length) {
-    this.toastr.warning('Please add at least one payment record');
-    return;
-  }
-
-  const data={
-    GetOpdPatient : this.OpdPatient,
-    GetOpdDetail : this.ServiceDetailList,
-    GetPayment: this.PaymentDetailList
-  }
-
-
-  // api call 
-
-console.log(data);
-
-}
-
-autoUpdatePaymentValues() {
-  const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
-
-  // Amount already paid from list
-  const paidFromList = this.PaymentDetailList.reduce(
-    (sum, item) => sum + Number(item.Amount || 0), 
-    0
-  );
-
-  const currentPaid = Number(this.Payment.Amount || 0);
-
-  // Remaining balance before typing
-  const duesBeforeTyping = grandTotal - paidFromList;
-
-  // ************ NEW RULE ************
-  // If user enters more than required, auto-correct it
-  if (currentPaid > duesBeforeTyping) {
-    this.Payment.Amount = duesBeforeTyping;  // Auto set balance amount
+    // Prevent negative dues
+    if (this.OpdPatient.TotalDuesAmount < 0) {
+      this.OpdPatient.TotalDuesAmount = 0;
+    }
   }
 
-  // RE-CALCULATE after correction
-  const correctedPaid = Number(this.Payment.Amount || 0);
-  const liveTotalPaid = paidFromList + correctedPaid;
 
-  // Update UI
-  this.OpdPatient.TotalPaidAmount = liveTotalPaid;
-  this.OpdPatient.TotalDuesAmount = grandTotal - liveTotalPaid;
 
-  if (this.OpdPatient.TotalDuesAmount < 0) {
-    this.OpdPatient.TotalDuesAmount = 0;
+  getPaymentModeName(modeId: number): string {
+    return this.PaymentModeList.find(x => x.Key === modeId)?.Value || '';
   }
 
-  // Get PaymentType keys
-  const fullPaidKey = this.PaymentTypeList.find(x => x.Value === "Full Paid")?.Key;
-  const duesKey = this.PaymentTypeList.find(x => x.Value === "Dues")?.Key;
-
-  // Decide payment type
-  if (liveTotalPaid === grandTotal) {
-    this.Payment.PaymentType = fullPaidKey;
-  } else {
-    this.Payment.PaymentType = duesKey;
+  getPaymentTypeName(typeId: number): string {
+    return this.PaymentTypeList.find(x => x.Key === typeId)?.Value || '';
   }
+  GetOpdTypeList(OpdtypeId: number): string {
+    return this.OpdTypeList.find(x => x.Key === OpdtypeId)?.Value || '';
+  }
+
+  deletePaymentDetail(index: number) {
+    if (confirm('Are you sure you want to delete this payment record?')) {
+      this.PaymentDetailList.splice(index, 1);
+      this.toastr.info('Payment deleted successfully');
+      this.calculateTotalPaidAmount(); // Recalculate totals after delete
+    }
+  }
+
+  autoUpdatePaymentValues() {
+    const grandTotal = Number(this.OpdPatient.GrandTotal || 0);
+
+    // Amount already paid from list
+    const paidFromList = this.PaymentDetailList.reduce(
+      (sum, item) => sum + Number(item.Amount || 0),
+      0
+    );
+
+    const currentPaid = Number(this.Payment.Amount || 0);
+
+    // Remaining balance before typing
+    const duesBeforeTyping = grandTotal - paidFromList;
+
+    // ************ NEW RULE ************
+    // If user enters more than required, auto-correct it
+    if (currentPaid > duesBeforeTyping) {
+      this.Payment.Amount = duesBeforeTyping;  // Auto set balance amount
+    }
+
+    // RE-CALCULATE after correction
+    const correctedPaid = Number(this.Payment.Amount || 0);
+    const liveTotalPaid = paidFromList + correctedPaid;
+
+    // Update UI
+    this.OpdPatient.TotalPaidAmount = liveTotalPaid;
+    this.OpdPatient.TotalDuesAmount = grandTotal - liveTotalPaid;
+
+    if (this.OpdPatient.TotalDuesAmount < 0) {
+      this.OpdPatient.TotalDuesAmount = 0;
+    }
+
+    // Get PaymentType keys
+    const fullPaidKey = this.PaymentTypeList.find(x => x.Value === "Full Paid")?.Key;
+    const duesKey = this.PaymentTypeList.find(x => x.Value === "Dues")?.Key;
+
+    // Decide payment type
+    if (liveTotalPaid === grandTotal) {
+      this.Payment.PaymentType = fullPaidKey;
+    } else {
+      this.Payment.PaymentType = duesKey;
+    }
+  }
+
+
+  saveOpd() {
+    this.isSubmitted = true;
+    this.formOpdPatient.control.markAllAsTouched();
+    if (this.formOpdPatient.invalid) {
+      this.toastr.error("Fill all the required fields !!")
+      return
+    }
+
+    this.OpdPatient.UpdatedBy = this.StaffLogin.StaffLoginId;
+    this.OpdPatient.CreatedBy = this.StaffLogin.StaffLoginId;
+    this.OpdPatient.OpdDate = this.loadDataService.loadDateTime(this.OpdPatient.OpdDate);
+    var data = {
+      GetOpd: this.OpdPatient,
+      GetOpdDetail: this.ServiceDetailList,
+      GetPayment: this.PaymentDetailList
+    }
+    console.log(data);
+    var obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify(data)).toString()
+    }
+    this.dataLoading = true;
+    this.service.saveOpd(obj).subscribe(r1 => {
+      let response = r1 as any
+      if (response.Message == ConstantData.SuccessMessage) {
+        if (this.OpdPatient.OpdId > 0) {
+          this.toastr.success("Data Details Updated successfully")
+        } else {
+          this.toastr.success("OPD Details Submitted successfully")
+        }
+        this.resetForm()
+
+        this.dataLoading = false;
+      } else {
+        this.toastr.error(response.Message)
+        // this.CakeBooking.OrderDate = new Date(this.CakeBooking.OrderDate);
+        this.dataLoading = false;
+      }
+    }, (err => {
+      this.toastr.error("Error occured while submitting data")
+      this.dataLoading = false;
+    }))
+  }
+  resetForm() {
+    this.OpdPatient = {
+      OpdDate: this.loadDataService.loadDateYMD(new Date()),
+      OpdType: 1
+    };
+
+    this.PaymentDetailList = [];
+    this.ServiceDetailList = [];
+
+    this.Payment = {
+      Amount: 0,
+      PaymentMode: "",
+      PaymentType: "",
+      PaymentDate: new Date(),
+      Remarks: ""
+    };
+
+    this.ServiceDetail = {
+      Quantity: 1,
+      Discount: 0
+    };
+    // VERY IMPORTANT → Restore patient list
+    this.PatientList = this.AllPatientList.slice();
+  }
+
 }
 
 
 
-
-}
+// resetForm() {
+//   this.OpdPatient = {};
+//   this.ServiceDetailList = [];
+//   this.PaymentDetailList = [];
+//   this.Payment = {};
+//   this.ServiceDetail = {};
+// };
