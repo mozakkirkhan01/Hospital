@@ -24,6 +24,7 @@ import { ManageServicecategoryComponent } from './admin/manage-servicecategory/m
 import { ManageServiceSubcategoryComponent } from './admin/manage-service-subcategory/manage-service-subcategory.component';
 import { ManageServicechargeComponent } from './admin/manage-servicecharge/manage-servicecharge.component';
 import { ManageOpdComponent } from './admin/manage-opd/manage-opd.component';
+import { ManageOpdListComponent } from './admin/manage-opd-list/manage-opd-list.component';
 const routes: Routes = [
   { path: '', redirectTo: "/admin-login", pathMatch: 'full' },
   { path: 'admin-login', component: AdminLoginComponent },
@@ -50,7 +51,8 @@ const routes: Routes = [
       { path: 'manage-servicecategory', component: ManageServicecategoryComponent},
       { path: 'manage-serviceSubcategory', component: ManageServiceSubcategoryComponent},
       { path: 'manage-servicecharge', component: ManageServicechargeComponent},
-      { path: 'manage-opd', component: ManageOpdComponent}
+      { path: 'manage-opd', component: ManageOpdComponent},
+      { path: 'manage-opd-list', component: ManageOpdListComponent},
 
     ]
   },
