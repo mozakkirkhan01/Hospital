@@ -44,6 +44,7 @@ import { ManageServicecategoryComponent } from './admin/manage-servicecategory/m
 import { ManageServiceSubcategoryComponent } from './admin/manage-service-subcategory/manage-service-subcategory.component';
 import { ManageServicechargeComponent } from './admin/manage-servicecharge/manage-servicecharge.component';
 import { ManageOpdComponent } from './admin/manage-opd/manage-opd.component';
+import { ManageOpdListComponent } from './admin/manage-opd-list/manage-opd-list.component';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { ManageOpdComponent } from './admin/manage-opd/manage-opd.component';
     ManageServiceSubcategoryComponent,
     ManageServicechargeComponent,
     ManageOpdComponent,
+    ManageOpdListComponent,
   ],
   imports: [
     BrowserModule,
