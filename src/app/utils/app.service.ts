@@ -12,7 +12,7 @@ export class AppService {
     AppKey: ConstantData.getAdminKey(),
   });
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getImageUrl(): string {
     return ConstantData.getBaseUrl();
@@ -38,16 +38,16 @@ export class AppService {
   }
 
   // Pateint
-  savePatient(obj:any) {
-    return this.http.post(this.apiUrl + 'Patient/savePatient',obj,
-      {headers: this.headers,});
+  savePatient(obj: any) {
+    return this.http.post(this.apiUrl + 'Patient/savePatient', obj,
+      { headers: this.headers, });
   }
 
-  getPatientList(obj:any) {
-    return this.http.post(this.apiUrl + 'Patient/patientList',obj,
-      {headers: this.headers,});
+  getPatientList(obj: any) {
+    return this.http.post(this.apiUrl + 'Patient/patientList', obj,
+      { headers: this.headers, });
   }
-      deletePatient(obj: any) {
+  deletePatient(obj: any) {
     return this.http.post(this.apiUrl + 'Patient/deletePatient', obj, {
       headers: this.headers,
     });
@@ -62,85 +62,88 @@ export class AppService {
     });
   }
 
-  getDoctorList(obj:any){
-     return this.http.post(this.apiUrl + 'Doctor/DoctorList', obj, {
+  getDoctorList(obj: any) {
+    return this.http.post(this.apiUrl + 'Doctor/DoctorList', obj, {
       headers: this.headers,
     });
   }
 
-    deleteDoctor(obj: any) {
+  deleteDoctor(obj: any) {
     return this.http.post(this.apiUrl + 'Doctor/deleteDoctor', obj, {
       headers: this.headers,
     });
   }
 
-    //servicecomponent
-    saveServiceCategory(obj: any){
-      return this.http.post(this.apiUrl + 'ServiceCategory/saveServiceCategory', obj,{
-        headers: this.headers,
-      });
-    }
-    getservicecategoryList(obj:any){
-     return this.http.post(this.apiUrl + 'ServiceCategory/serviceCategoryList', obj, {
+  //servicecomponent
+  saveServiceCategory(obj: any) {
+    return this.http.post(this.apiUrl + 'ServiceCategory/saveServiceCategory', obj, {
+      headers: this.headers,
+    });
+  }
+  getservicecategoryList(obj: any) {
+    return this.http.post(this.apiUrl + 'ServiceCategory/serviceCategoryList', obj, {
       headers: this.headers,
     });
   }
 
-    deleteservicecategory(obj: any) {
+  deleteservicecategory(obj: any) {
     return this.http.post(this.apiUrl + 'ServiceCategory/deleteServiceCategory', obj, {
       headers: this.headers,
     });
   }
 
-    //service Sub component
+  //service Sub component
 
-    saveserviceSubcategory(obj: any){
-      return this.http.post(this.apiUrl + 'ServiceSubCategory/saveServiceSubCategory', obj,{
-        headers: this.headers,
-      });
-    }
-    
-    getserviceSubcategoryList(obj:any)
-    {
-      return this.http.post(this.apiUrl + 'ServiceSubCategory/serviceSubCategoryList', obj, {
+  saveserviceSubcategory(obj: any) {
+    return this.http.post(this.apiUrl + 'ServiceSubCategory/saveServiceSubCategory', obj, {
       headers: this.headers,
-      });
-    }
+    });
+  }
 
-      deleteserviceSubcategory(obj: any) 
-    {
-      return this.http.post(this.apiUrl + 'ServiceSubCategory/deleteserviceSubCategory', obj, {
+  getserviceSubcategoryList(obj: any) {
+    return this.http.post(this.apiUrl + 'ServiceSubCategory/serviceSubCategoryList', obj, {
       headers: this.headers,
-     });
-    }
-  
+    });
+  }
 
-    //service charge
-        saveservicecharge(obj: any){
-      return this.http.post(this.apiUrl + 'ServiceCharge/saveServiceCharge', obj,{
-        headers: this.headers,
-      });
-    }
-
-    //Service Charge list
-    getServiceChargeList(obj:any)
-    {
-      return this.http.post(this.apiUrl + 'ServiceCharge/serviceChargeList', obj, {
+  deleteserviceSubcategory(obj: any) {
+    return this.http.post(this.apiUrl + 'ServiceSubCategory/deleteserviceSubCategory', obj, {
       headers: this.headers,
-      });
-    }
+    });
+  }
 
-    
-    //opdDetails
-    saveOpd(obj:any)
-    {
-      return this.http.post(this.apiUrl + 'Opd/saveOpd', obj, {
+
+  //service charge
+  saveservicecharge(obj: any) {
+    return this.http.post(this.apiUrl + 'ServiceCharge/saveServiceCharge', obj, {
       headers: this.headers,
-      });
-    }
+    });
+  }
+
+  //Service Charge list
+  getServiceChargeList(obj: any) {
+    return this.http.post(this.apiUrl + 'ServiceCharge/serviceChargeList', obj, {
+      headers: this.headers,
+    });
+  }
 
 
-    
+  //opdDetails
+  saveOpd(obj: any) {
+    return this.http.post(this.apiUrl + 'Opd/saveOpd', obj, {
+      headers: this.headers,
+    });
+  }
+  //opdLIst
+  getOpdList(obj: any) {
+    return this.http.post(this.apiUrl + 'Opd/OpdList', obj, {
+      headers: this.headers,
+    });
+  }
+
+
+
+
 
   // Company
   getCompanyList(obj: any) {
