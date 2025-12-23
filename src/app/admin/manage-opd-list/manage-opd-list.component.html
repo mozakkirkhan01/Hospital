@@ -1,4 +1,3 @@
-<p>manage-opd-list works!</p>
 <app-progress *ngIf="dataLoading"></app-progress>
 <main id="main" class="main" *ngIf="action.ResponseReceived">
     <div class="row">
@@ -40,63 +39,83 @@
                         <thead>
                             <tr>
                                 <th>S.No</th>
+                                <th (click)="sort('OpdNo')">Opd No</th>
+                                <th (click)="sort('OpdDate')">Opd Date</th>
+                                <th (click)="sort('UHIDNo')">UHID</th>
                                 <th (click)="sort('PatientName')">Patient Name</th>
-                                <th (click)="sort('UHIDNo')">Patient UHID Number</th>
-                                <th (click)="sort('Gender')">Gender</th>
-                                <th (click)="sort('BloodGroup')">Blood Group</th>
-                                <th (click)="sort('MaritalStatus')"> Marital Status</th>
-                                <th (click)="sort('DateOfBirth')">Date Of Birth</th>
-                                <th (click)="sort('Age')">Age</th>
-                                <th (click)="sort('MobileNo')">Mobile No</th>
-                                <th (click)="sort('Email')">E-mail </th>
-                                <th (click)="sort('JoinDate')">Join Date</th>
-                                <th (click)="sort('Address')">Address</th>
-                                <th (click)="sort('AadharNo')">AadharNo</th>
+                                <th (click)="sort('MobileNo')"> Mobile No</th>
+                                <th (click)="sort('TokenNo')">Token No</th>
+                                <th (click)="sort('LineTotal')">Rate</th>
+                                <th (click)="sort('TotalDiscount')">Total Discount</th>
+                                <th (click)="sort('GrandTotal')">Grand Total</th>
+                                <th (click)="sort('TotalPaidAmount')">Total Paid Amount</th>
+                                <th (click)="sort('TotalDuesAmount')">Total Dues Amount</th>
+                                <th *ngIf="action.CanEdit">View</th>
                                 <th *ngIf="action.CanEdit">Edit</th>
-                                <th *ngIf="action.CanDelete">Delete</th>
-                                <th (click)="sort('Status')">Status</th>
+                                <th *ngIf="action.CanDelete">Cancel</th>
+                                <th *ngIf="action.CanDelete">Pay</th>
+                                <th (click)="sort('Status')">Payment Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr
-                                *ngFor="let item of PatientList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
+                                *ngFor="let item of OpdList |filter:Search:true|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; ; let i = index;">
                                 <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
-                                <td>{{item.PatientName}}</td>
+                                <td>{{item.OpdNo}}</td>
+                                <td style="white-space:nowrap">{{item.OpdDate | date: "dd-MM-yy"}}</td>
                                 <td>{{item.UHIDNo}}</td>
-                                <td>{{AllGenderList[item.Gender]}}</td>
-                                <td>{{AllBloodGroupList[item.BloodGroup]}}</td>
-                                <td>{{AllMaritalStatusList[item.MaritalStatus]}}</td>
-                                <td style="white-space:nowrap">{{item.DateOfBirth | date: "dd-MM-yy"}}</td>
-                                <td>{{item.Age}}</td>
+                                <td>{{item.PatientName}}</td>
                                 <td>{{item.MobileNo}}</td>
-                                <td>{{item.Email}}</td>
-                                <td style="white-space:nowrap">{{item.JoinDate | date: "dd-MM-yy"}}</td>
-                                <td>{{item.Address}}</td>
-                                <td>{{item.AadharNo}}</td>
+                                <td>{{item.TokenNo}}</td>
+                                <td>{{item.LineTotal}}</td>
+                                <td>{{item.TotalDiscount}}</td>
+                                <td>{{item.GrandTotal}}</td>
+                                <td>{{item.TotalPaidAmount}}</td>
+                                <td>{{item.TotalDuesAmount}}</td>
+                                <td class="text-center">
+                                    <button *ngIf="item.PaymentStatus != OpdList.Cancelled"
+                                        class="btn btn-sm btn btn-primary">
+                                        <!-- //(click)="openViewModal(item)" -->
+                                        <i class="bi bi-eye-fill"></i>
+                                    </button>
+                                </td>
                                 <td *ngIf="action.CanEdit">
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#staticBackdrop" (click)="editPatient(item)">
+                                        data-bs-target="#staticBackdrop">
+                                        <!-- (click)="editPatient(item)" -->
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </td>
                                 <td *ngIf="action.CanDelete">
-                                    <button class="btn btn-sm btn-danger" (click)="deletePatient(item)">
-                                        <i class="bi bi-trash-fill"></i>
+                                    <button class="btn btn-sm btn-danger">
+                                        <!-- (click)="deletePatient(item)" -->
+                                        <i class="bi bi-x-octagon-fill"></i>
                                     </button>
                                 </td>
-                                <td>
-                                    <span class="p-1"
-                                        [ngClass]="item.Status == 1 ? 'badge text-bg-success':'badge text-bg-danger'">
-                                        {{AllStatusList[item.Status]}}
+                                <td *ngIf="action.CanDelete">
+                                    <button class="btn btn-sm btn-danger">
+                                        <!-- (click)="deletePatient(item)" -->
+                                        <i class="bi bi-wallet2"></i>
+
+                                    </button>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge p-1" [ngClass]="item.PaymentStatus === PaymentStatusEnum.Paid 
+                                ? 'text-bg-success' 
+                                 : 'text-bg-warning'">
+
+                                        {{ PaymentStatusEnum[item.PaymentStatus] }}
+
                                     </span>
                                 </td>
+
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="dataTable-bottom ">
-                    <pagination-controls (pageChange)="onTableDataChange($event)"
-                        class="pagination justify-content-end"></pagination-controls>
+                    <!-- <pagination-controls (pageChange)="onTableDataChange($event)"
+                        class="pagination justify-content-end"></pagination-controls> -->
                 </div>
             </div>
         </div>
