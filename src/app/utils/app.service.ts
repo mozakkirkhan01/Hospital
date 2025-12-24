@@ -145,6 +145,12 @@ export class AppService {
       headers: this.headers,
     });
   }
+  // viewopdlist
+  OpdDetailList(obj: any) {
+    return this.http.post(this.apiUrl + 'Opd/OpdDetailList', obj, {
+      headers: this.headers,
+    });
+  }
 
 
 
