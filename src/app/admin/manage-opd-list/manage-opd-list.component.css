@@ -1,0 +1,8 @@
+.opd-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.opd-table-wrapper table {
+  min-width: 1400px; /* adjust based on columns */
+}

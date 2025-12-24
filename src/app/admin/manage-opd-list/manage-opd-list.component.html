@@ -34,8 +34,8 @@
                             placeholder="Search..." type="text">
                     </div>
                 </div>
-                <div class="table-container overflow-auto">
-                    <table class="table table-bordered table-hover">
+                <div  class="opd-table-wrapper table-responsive">
+                    <table class="table table-bordered table-hover text-center align-middle ">
                         <thead>
                             <tr>
                                 <th>S.No</th>
@@ -46,10 +46,10 @@
                                 <th (click)="sort('MobileNo')"> Mobile No</th>
                                 <th (click)="sort('TokenNo')">Token No</th>
                                 <th (click)="sort('LineTotal')">Rate</th>
-                                <th (click)="sort('TotalDiscount')">Total Discount</th>
+                                <th (click)="sort('TotalDiscount')">Discount</th>
                                 <th (click)="sort('GrandTotal')">Grand Total</th>
                                 <th (click)="sort('TotalPaidAmount')">Total Paid Amount</th>
-                                <th (click)="sort('TotalDuesAmount')">Total Dues Amount</th>
+                                <th (click)="sort('TotalDuesAmount')">Dues Amount</th>
                                 <th *ngIf="action.CanEdit">View</th>
                                 <th *ngIf="action.CanEdit">Edit</th>
                                 <th *ngIf="action.CanDelete">Cancel</th>
