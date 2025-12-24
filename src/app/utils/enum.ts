@@ -66,8 +66,8 @@ export enum PaymentType {
     Dues = 2
 }
 export enum BillStatus {
-    Paid = 1,
-    Cancel = 2
+    confirmed = 1,
+    Cancelled = 2
 }
 export enum BookingStatus {
     "Tour Pending" = 1,
