@@ -140,6 +140,11 @@ export class AppService {
       headers: this.headers,
     });
   }
+  cancelOpd(obj: any) {
+    return this.http.post(this.apiUrl + 'Opd/CancelOpd', obj, {
+      headers: this.headers,
+    });
+  }
 
 
 
