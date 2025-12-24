@@ -5,7 +5,7 @@ import { AppService } from '../../utils/app.service';
 import { ConstantData } from '../../utils/constant-data';
 import { LoadDataService } from '../../utils/load-data.service';
 import { LocalService } from '../../utils/local.service';
-import { Gender, DocType, Status, BloodGroup, PaymentStatus } from '../../utils/enum';
+import { Gender, DocType, Status, BloodGroup, PaymentStatus,BillStatus } from '../../utils/enum';
 import { ActionModel, RequestModel, StaffLoginModel } from '../../utils/interface';
 import { Router } from '@angular/router';
 
@@ -150,5 +150,76 @@ validiateMenu() {
   
   }
   PaymentStatusEnum = PaymentStatus;
+  BillStatusEnum = BillStatus;
+
+@ViewChild('OpdCancelForm') OpdCancelForm!: NgForm;
+
+openCancelModal(item: any) {
+  this.OpdPatient = {
+    OpdId: item.OpdId,
+    PatientName: item.PatientName,   // ✅ shows here
+    OpdCancelDate :new Date(),
+    BillStatus: 2   // Cancelled
+  };
+}
+
+SaveCancelationOpd() {
+
+  if (!this.OpdPatient.OpdId) {
+    this.toastr.error('Invalid OPD selected');
+    return;
+  }
+
+  if (!this.OpdPatient.CancelReason) {
+    this.toastr.warning('Please enter cancellation reason');
+    return;
+  }
+
+  if (!this.OpdPatient.OpdCancelDate) {
+    this.toastr.warning('Please select cancellation date');
+    return;
+  }
+   this.OpdCancelForm.control.markAllAsTouched();
+
+  // Auto force cancelled
+  this.OpdPatient.BillStatus = 2;
+
+  const data = {
+    OpdId: this.OpdPatient.OpdId,
+    CancelReason: this.OpdPatient.CancelReason,
+    OpdCancelDate: this.loadDataService.loadDateTime(
+      this.OpdPatient.OpdCancelDate
+    ),
+    BillStatus: this.OpdPatient.BillStatus,
+    UpdatedBy: this.StaffLogin.StaffLoginId
+  };
+
+  console.log('Cancel OPD payload:', data);
+
+  const obj: RequestModel = {
+    request: this.localService.encrypt(JSON.stringify(data)).toString()
+  };
+
+  this.dataLoading = true;
+
+  this.service.cancelOpd(obj).subscribe(
+    (res: any) => {
+      if (res.Message === ConstantData.SuccessMessage) {
+        this.toastr.success('OPD cancelled successfully');
+        // this.resetForm();
+        this.getOpdList(); // reload list
+      } else {
+        this.toastr.error(res.Message);
+      }
+      this.dataLoading = false;
+    },
+    (err) => {
+      console.error(err);
+      this.toastr.error('Error while cancelling OPD');
+      this.dataLoading = false;
+    }
+  );
+}
+
 
 }

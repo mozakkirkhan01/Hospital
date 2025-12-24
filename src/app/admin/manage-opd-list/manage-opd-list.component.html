@@ -55,6 +55,7 @@
                                 <th *ngIf="action.CanDelete">Cancel</th>
                                 <th *ngIf="action.CanDelete">Pay</th>
                                 <th (click)="sort('Status')">Payment Status</th>
+                                <th (click)="sort('BillStatus')">Bill Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,15 +81,14 @@
                                     </button>
                                 </td>
                                 <td *ngIf="action.CanEdit">
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#staticBackdrop">
+                                    <button class="btn btn-sm btn-warning">
                                         <!-- (click)="editPatient(item)" -->
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </td>
                                 <td *ngIf="action.CanDelete">
-                                    <button class="btn btn-sm btn-danger">
-                                        <!-- (click)="deletePatient(item)" -->
+                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop" (click)="openCancelModal(item)">
                                         <i class="bi bi-x-octagon-fill"></i>
                                     </button>
                                 </td>
@@ -100,11 +100,16 @@
                                     </button>
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge p-1" [ngClass]="item.PaymentStatus === PaymentStatusEnum.Paid 
-                                ? 'text-bg-success' 
-                                 : 'text-bg-warning'">
-
+                                    <span class="badge p-1"
+                                        [ngClass]="item.PaymentStatus === PaymentStatusEnum.Paid ? 'text-bg-success': 'text-bg-warning'">
                                         {{ PaymentStatusEnum[item.PaymentStatus] }}
+
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge p-1"
+                                        [ngClass]="item.BillStatus === BillStatusEnum.confirmed? 'text-bg-success': 'text-bg-warning'">
+                                        {{ BillStatusEnum[item.BillStatus] }}
 
                                     </span>
                                 </td>
@@ -121,6 +126,103 @@
         </div>
 
     </section>
+
+
+
+    <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade modal-lg" id="staticBackdrop"
+        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Cancel Opd</h1>
+
+                    <button type=" button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        (click)="resetForm()"></button>
+                </div>
+                <div class="modal-body">
+                    <form #OpdCancelForm="ngForm" class="d-flex justify-content-evenly flex-wrap">
+                        <div class="container">
+
+                            <!-- Patient Name -->
+                            <div class="col-sm-5 mb-3">
+                                <label class="fw-semibold mb-1 d-block">
+                                    Patient Name
+                                </label>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput name="PatientName" [(ngModel)]="OpdPatient.PatientName" readonly />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-sm-8">
+                                <label class="fw-semibold mb-1 d-block">
+                                    Reason for Cancelling OPD
+                                </label>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <textarea matInput name="CancelReason" [(ngModel)]="OpdPatient.CancelReason"
+                                        #CancelReason="ngModel" placeholder="Enter cancellation reason..." rows="3"
+                                        required>
+                                </textarea>
+                                    <mat-error *ngIf="CancelReason.invalid && (CancelReason.touched || isSubmitted)">
+                                        Cancellation reason is required
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput [matDatepicker]="OpdCancelDatePicker" name="OpdCancelDate"
+                                        [(ngModel)]="OpdPatient.OpdCancelDate" #CancelDate="ngModel" required />
+
+                                    <mat-datepicker-toggle matSuffix
+                                        [for]="OpdCancelDatePicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #OpdCancelDatePicker></mat-datepicker>
+
+                                    <mat-error *ngIf="CancelDate.invalid && (CancelDate.touched || isSubmitted)">
+                                        Cancellation date is required
+                                    </mat-error>
+                                </mat-form-field>
+
+
+                                <div class="col-sm-4 mb-3">
+                                    <label class="fw-semibold mb-1 d-block">
+                                        Bill Status
+                                    </label>
+
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-select name="BillStatus" [(ngModel)]="OpdPatient.BillStatus">
+                                            <mat-option [value]="2">Cancelled</mat-option>
+                                            <mat-option [value]="1">Confirmed</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer mt-2">
+
+                    <button type="button" mat-raised-button color="warn" class="me-2" data-bs-dismiss="modal"
+                        (click)="resetForm()">Cancel</button>
+
+                    <button mat-raised-button color="primary" (click)="SaveCancelationOpd()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
 
 
 
