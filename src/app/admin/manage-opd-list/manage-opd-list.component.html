@@ -12,10 +12,10 @@
             </nav>
         </div>
         <div class="col-sm-4">
-
+<!-- 
             <button mat-raised-button color="primary" *ngIf="action.CanCreate" class="float-right"
                 data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="resetForm()">New
-                Patient</button>
+                Patient</button> -->
         </div>
     </div>
 
@@ -75,7 +75,9 @@
                                 <td>{{item.TotalDuesAmount}}</td>
                                 <td class="text-center">
                                     <button *ngIf="item.PaymentStatus != OpdList.Cancelled"
-                                        class="btn btn-sm btn btn-primary">
+                                        class="btn btn-sm btn btn-primary"  data-bs-toggle="modal" 
+                                        data-bs-target="#viewOpdModal"
+                                         (click)=" openViewModal(item)">
                                         <!-- //(click)="openViewModal(item)" -->
                                         <i class="bi bi-eye-fill"></i>
                                     </button>
@@ -128,7 +130,7 @@
     </section>
 
 
-
+<!-- // cancellation function -->
     <div *ngIf="action.CanEdit || action.CanCreate" class="modal fade modal-lg" id="staticBackdrop"
         data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
         aria-hidden="true">
@@ -213,6 +215,140 @@
             </div>
         </div>
     </div>
+
+
+    <!-- //view Opd Detail -->
+<div class="modal fade" id="viewOpdModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content shadow-lg rounded-4">
+
+      <!-- HEADER -->
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fw-semibold">
+          <i class="bi bi-file-medical me-2"></i> OPD Details
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- PATIENT DETAILS -->
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-light fw-semibold">
+            <i class="bi bi-person-badge me-2"></i> Patient Details
+          </div>
+
+          <div class="card-body">
+            <div class="row text-center gy-2">
+              <div class="col-md-2">
+                <div class="text-muted small">Name</div>
+                <div class="fw-semibold">{{ViewOpd.PatientName}}</div>
+              </div>
+              <div class="col-md-2">
+                <div class="text-muted small">UHID</div>
+                <div class="fw-semibold">{{ViewOpd.UHIDNo}}</div>
+              </div>
+              <div class="col-md-2">
+                <div class="text-muted small">Mobile</div>
+                <div class="fw-semibold">{{ViewOpd.MobileNo}}</div>
+              </div>
+              <div class="col-md-2">
+                <div class="text-muted small">OPD No</div>
+                <span class="badge bg-info">{{ViewOpd.OpdNo}}</span>
+              </div>
+              <div class="col-md-3">
+                <div class="text-muted small">OPD Type</div>
+                <span class="badge bg-success">
+                  {{GetOpdTypeList(ViewOpd.OpdType)}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERVICE DETAILS -->
+        <div class="card mb-4 border-0 shadow-sm">
+          <div class="card-header bg-light fw-semibold">
+            <i class="bi bi-clipboard-pulse me-2"></i> Service Details
+          </div>
+
+          <div class="card-body p-0">
+            <table class="table table-hover table-bordered text-center align-middle mb-0">
+              <thead class="table-secondary">
+                <tr>
+                  <th>#</th>
+                  <th>Category</th>
+                  <th>Sub Category</th>
+                  <th>Rate</th>
+                  <th>Qty</th>
+                  <th>Discount</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let s of ViewOpd.Services; let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{s.ServiceCategoryName}}</td>
+                  <td>{{s.ServiceSubCategoryName}}</td>
+                  <td>₹ {{s.ServiceChargeAmount}}</td>
+                  <td>{{s.Quantity}}</td>
+                  <td class="text-danger">-₹ {{s.Discount}}</td>
+                  <td class="fw-semibold text-success">₹ {{s.Total}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PAYMENT DETAILS -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-light fw-semibold">
+            <i class="bi bi-wallet2 me-2"></i> Payment Details
+          </div>
+
+          <div class="card-body p-0">
+            <table class="table table-hover table-bordered text-center align-middle mb-0">
+              <thead class="table-secondary">
+                <tr>
+                  <th>#</th>
+                  <th>Amount</th>
+                  <th>Mode</th>
+                  <th>Type</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of ViewOpd.Services; let i=index">
+                  <td>{{i+1}}</td>
+                  <td class="fw-semibold">₹ {{p.Amount}}</td>
+                  <td>{{getPaymentModeName(p.PaymentMode)}}</td>
+                  <td>
+                    <span class="badge"
+                      [ngClass]="p.PaymentType === 1 ? 'bg-success' : 'bg-warning'">
+                      {{getPaymentTypeName(p.PaymentType)}}
+                    </span>
+                  </td>
+                  <td>{{p.PaymentDate | date:'dd/MM/yyyy'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-1"></i> Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 
 
 
