@@ -52,6 +52,7 @@ const routes: Routes = [
       { path: 'manage-serviceSubcategory', component: ManageServiceSubcategoryComponent},
       { path: 'manage-servicecharge', component: ManageServicechargeComponent},
       { path: 'manage-opd', component: ManageOpdComponent},
+      { path: 'manage-opd/:id', component: ManageOpdComponent },
       { path: 'manage-opd-list', component: ManageOpdListComponent},
 
     ]
