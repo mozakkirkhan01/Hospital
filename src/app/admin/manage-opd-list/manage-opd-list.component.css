@@ -6,3 +6,7 @@
 .opd-table-wrapper table {
   min-width: 1400px; /* adjust based on columns */
 }
+.card-body {
+    margin-top: 19px;
+    margin-bottom: 10px;
+}
