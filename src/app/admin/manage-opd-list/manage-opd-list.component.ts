@@ -5,7 +5,7 @@ import { AppService } from '../../utils/app.service';
 import { ConstantData } from '../../utils/constant-data';
 import { LoadDataService } from '../../utils/load-data.service';
 import { LocalService } from '../../utils/local.service';
-import { Gender, DocType, Status, BloodGroup, PaymentStatus,BillStatus } from '../../utils/enum';
+import { Gender, DocType, Status, BloodGroup, PaymentStatus, BillStatus, PaymentMode, PaymentType, OpdType } from '../../utils/enum';
 import { ActionModel, RequestModel, StaffLoginModel } from '../../utils/interface';
 import { Router } from '@angular/router';
 
@@ -40,18 +40,18 @@ export class ManageOpdListComponent {
   dataLoading: boolean = false;
   action: ActionModel = {} as ActionModel;
   StaffLogin: StaffLoginModel = {} as StaffLoginModel;
-  // PaymentModeList = this.loadDataService.GetEnumList(PaymentMode);
-  // PaymentTypeList = this.loadDataService.GetEnumList(PaymentType);
-  // OpdTypeList = this.loadDataService.GetEnumList(OpdType);
+  PaymentModeList = this.loadDataService.GetEnumList(PaymentMode);
+  PaymentTypeList = this.loadDataService.GetEnumList(PaymentType);
+  OpdTypeList = this.loadDataService.GetEnumList(OpdType);
   // BloodGroupList = this.loadDataService.GetEnumList(BloodGroup);
   userDetail: any = {};
 
-    sort(key: any) {
+  sort(key: any) {
     this.sortKey = key;
     this.reverse = !this.reverse;
   }
 
-    constructor(
+  constructor(
     private service: AppService,
     private toastr: ToastrService,
     private loadDataService: LoadDataService,
@@ -73,7 +73,7 @@ export class ManageOpdListComponent {
     this.isSubmitted = false
   }
 
-validiateMenu() {
+  validiateMenu() {
     var obj: RequestModel = {
       request: this.localService
         .encrypt(
@@ -102,8 +102,10 @@ validiateMenu() {
       }
     );
   }
+  OpdPaymentDetail: any = {};
 
-  getOpdList(){
+
+  getOpdList() {
     // if (this.filterModel.StartFrom) {
     //   this.filterModel.StartFrom = this.loadData.loadDateYMD(
     //     this.filterModel.StartFrom
@@ -121,7 +123,7 @@ validiateMenu() {
 
     const obj: RequestModel = {
       request: this.localService
-        .encrypt(JSON.stringify({ }))
+        .encrypt(JSON.stringify({}))
         .toString(),
     };
     this.dataLoading = true;
@@ -130,8 +132,6 @@ validiateMenu() {
         let response = r1 as any;
         if (response.Message === ConstantData.SuccessMessage) {
           this.OpdList = response.OpdList;
-          this.OpdPaymentList.TotalTaxableAmount = response.TotalTaxableAmount;
-          this.OpdPaymentList.TotalGSTAmount = response.TotalGSTAmount;
           this.OpdPaymentList.TotalDiscountAmount = response.TotalDiscountAmount;
           this.OpdPaymentList.TotalAmount = response.TotalAmount;
           this.OpdPaymentList.TotalPaidAmount = response.TotalPaidAmount;
@@ -139,7 +139,7 @@ validiateMenu() {
         } else {
           this.toastr.error(response.Message);
         }
-        console.log( this.OpdList);
+        console.log(this.OpdList);
         this.dataLoading = false;
       },
       (err) => {
@@ -147,79 +147,166 @@ validiateMenu() {
         this.dataLoading = false;
       }
     );
-  
+
   }
   PaymentStatusEnum = PaymentStatus;
   BillStatusEnum = BillStatus;
 
-@ViewChild('OpdCancelForm') OpdCancelForm!: NgForm;
+  @ViewChild('OpdCancelForm') OpdCancelForm!: NgForm;
 
-openCancelModal(item: any) {
-  this.OpdPatient = {
-    OpdId: item.OpdId,
-    PatientName: item.PatientName,   // ✅ shows here
-    OpdCancelDate :new Date(),
-    BillStatus: 2   // Cancelled
-  };
-}
-
-SaveCancelationOpd() {
-
-  if (!this.OpdPatient.OpdId) {
-    this.toastr.error('Invalid OPD selected');
-    return;
+  openCancelModal(item: any) {
+    this.OpdPatient = {
+      OpdId: item.OpdId,
+      PatientName: item.PatientName,   // ✅ shows here
+      OpdCancelDate: new Date(),
+      BillStatus: 2   // Cancelled
+    };
   }
 
-  if (!this.OpdPatient.CancelReason) {
-    this.toastr.warning('Please enter cancellation reason');
-    return;
-  }
+  SaveCancelationOpd() {
 
-  if (!this.OpdPatient.OpdCancelDate) {
-    this.toastr.warning('Please select cancellation date');
-    return;
-  }
-   this.OpdCancelForm.control.markAllAsTouched();
-
-  // Auto force cancelled
-  this.OpdPatient.BillStatus = 2;
-
-  const data = {
-    OpdId: this.OpdPatient.OpdId,
-    CancelReason: this.OpdPatient.CancelReason,
-    OpdCancelDate: this.loadDataService.loadDateTime(
-      this.OpdPatient.OpdCancelDate
-    ),
-    BillStatus: this.OpdPatient.BillStatus,
-    UpdatedBy: this.StaffLogin.StaffLoginId
-  };
-
-  console.log('Cancel OPD payload:', data);
-
-  const obj: RequestModel = {
-    request: this.localService.encrypt(JSON.stringify(data)).toString()
-  };
-
-  this.dataLoading = true;
-
-  this.service.cancelOpd(obj).subscribe(
-    (res: any) => {
-      if (res.Message === ConstantData.SuccessMessage) {
-        this.toastr.success('OPD cancelled successfully');
-        // this.resetForm();
-        this.getOpdList(); // reload list
-      } else {
-        this.toastr.error(res.Message);
-      }
-      this.dataLoading = false;
-    },
-    (err) => {
-      console.error(err);
-      this.toastr.error('Error while cancelling OPD');
-      this.dataLoading = false;
+    if (!this.OpdPatient.OpdId) {
+      this.toastr.error('Invalid OPD selected');
+      return;
     }
-  );
-}
 
+    if (!this.OpdPatient.CancelReason) {
+      this.toastr.warning('Please enter cancellation reason');
+      return;
+    }
+
+    if (!this.OpdPatient.OpdCancelDate) {
+      this.toastr.warning('Please select cancellation date');
+      return;
+    }
+    this.OpdCancelForm.control.markAllAsTouched();
+
+    // Auto force cancelled
+    this.OpdPatient.BillStatus = 2;
+
+    const data = {
+      OpdId: this.OpdPatient.OpdId,
+      CancelReason: this.OpdPatient.CancelReason,
+      OpdCancelDate: this.loadDataService.loadDateTime(
+        this.OpdPatient.OpdCancelDate
+      ),
+      BillStatus: this.OpdPatient.BillStatus,
+      UpdatedBy: this.StaffLogin.StaffLoginId
+    };
+
+    console.log('Cancel OPD payload:', data);
+
+    const obj: RequestModel = {
+      request: this.localService.encrypt(JSON.stringify(data)).toString()
+    };
+
+    this.dataLoading = true;
+
+    this.service.cancelOpd(obj).subscribe(
+      (res: any) => {
+        if (res.Message === ConstantData.SuccessMessage) {
+          this.toastr.success('OPD cancelled successfully');
+          // this.resetForm();
+          this.getOpdList(); // reload list
+        } else {
+          this.toastr.error(res.Message);
+        }
+        this.dataLoading = false;
+      },
+      (err) => {
+        console.error(err);
+        this.toastr.error('Error while cancelling OPD');
+        this.dataLoading = false;
+      }
+    );
+  }
+
+  // opd view modal
+  ViewOpd: any = {
+    Services: [],
+  };
+
+  // openViewModal(item: any) {
+
+  //   this.ViewOpd = {
+  //     OpdId: item.OpdId,
+  //     OpdNo: item.OpdNo,
+  //     PatientName: item.PatientName,
+  //     UHIDNo: item.UHIDNo,
+  //     MobileNo: item.MobileNo,
+  //     Services: [],
+  //     Payments: []
+  //   };
+
+  //   // 🔹 Call API to get full details
+  //   const obj: RequestModel = {
+  //     request: this.localService.encrypt(
+  //       JSON.stringify({ OpdId: item.OpdId })
+  //     ).toString()
+  //   };
+
+  //   this.service.getOpdList(obj).subscribe((res: any) => {
+  //     if (res.Message === ConstantData.SuccessMessage) {
+  //       this.ViewOpd.Services = res.OpdList;
+  //       this.ViewOpd.Payments = res.OpdList;
+  //     }
+  //     console.log(this.ViewOpd);
+  //   });
+  // }
+
+
+  // openViewModal(item: any) {
+  //   this.selectedBooking = null;
+  //   this.guestDetails = null;
+  //   this.subGuestDetails = []; // ✅
+  //   this.roomDetails = [];
+  //   this.paymentDetails = [];
+
+  //   $('#viewBookingDetailsModal').modal('show');
+  //   this.getBookingDetails(item.RoomBookingId);
+  // }
+
+  openViewModal(item: any) {
+
+    this.ViewOpd = {
+      OpdId: item.OpdId,
+      OpdNo: item.OpdNo,
+      PatientName: item.PatientName,
+      UHIDNo: item.UHIDNo,
+      MobileNo: item.MobileNo,
+      OpdType: item.OpdType,
+      Services: [],
+
+    };
+
+    // 🔹 Call API to get full details
+    const obj: RequestModel = {
+      request: this.localService.encrypt(
+        JSON.stringify({ OpdId: item.OpdId })).toString()
+    };
+
+
+
+    this.service.OpdDetailList(obj).subscribe((res: any) => {
+      if (res.Message === ConstantData.SuccessMessage) {
+        this.ViewOpd.Services = (res.OpdDetailList || []).filter((x: any) => x.OpdId === item.OpdId);
+      }
+    });
+    console.log(this.ViewOpd);
+  }
+
+
+
+
+  GetOpdTypeList(OpdtypeId: number): string {
+    return this.OpdTypeList.find(x => x.Key === OpdtypeId)?.Value || '';
+  }
+  getPaymentModeName(modeId: number): string {
+    return this.PaymentModeList.find(x => x.Key === modeId)?.Value || '';
+  }
+
+  getPaymentTypeName(typeId: number): string {
+    return this.PaymentTypeList.find(x => x.Key === typeId)?.Value || '';
+  }
 
 }
