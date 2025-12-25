@@ -152,6 +152,13 @@ export class AppService {
     });
   }
 
+  // EditOpdlist
+  getOpdDetailById(obj: any) {
+    return this.http.post(this.apiUrl + 'Opd/opdDetailById', obj, {
+      headers: this.headers,
+    });
+  }
+
 
 
 
