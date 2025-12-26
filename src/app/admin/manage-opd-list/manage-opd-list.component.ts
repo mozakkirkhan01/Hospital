@@ -10,16 +10,6 @@ import { ActionModel, RequestModel, StaffLoginModel } from '../../utils/interfac
 import { Router } from '@angular/router';
 
 declare var $: any
-// import {
-//   Gender,
-//   DocType,
-//   Status,
-//   BloodGroup,
-//   PaymentMode,
-//   PaymentType,
-//   OpdType,
-//   // MaritalStatus,
-// } from '../../utils/enum';
 
 @Component({
   selector: 'app-manage-opd-list',
@@ -43,7 +33,6 @@ export class ManageOpdListComponent {
   PaymentModeList = this.loadDataService.GetEnumList(PaymentMode);
   PaymentTypeList = this.loadDataService.GetEnumList(PaymentType);
   OpdTypeList = this.loadDataService.GetEnumList(OpdType);
-  // BloodGroupList = this.loadDataService.GetEnumList(BloodGroup);
   userDetail: any = {};
 
   sort(key: any) {
@@ -65,7 +54,6 @@ export class ManageOpdListComponent {
     this.validiateMenu();
     console.log("checking");
     this.getOpdList();
-    // this.getPatientList();
   }
   resetForm() {
     this.OpdPatient = {};
@@ -275,6 +263,7 @@ export class ManageOpdListComponent {
       UHIDNo: item.UHIDNo,
       MobileNo: item.MobileNo,
       OpdType: item.OpdType,
+      OpdDate: item.OpdDate,
       Services: [],
 
     };
@@ -308,5 +297,24 @@ export class ManageOpdListComponent {
   getPaymentTypeName(typeId: number): string {
     return this.PaymentTypeList.find(x => x.Key === typeId)?.Value || '';
   }
+
+  EditOpd(data: any) {
+    this.router.navigate(['/admin/manage-opd'], {
+      queryParams: {
+        id: data.OpdId,
+        redUrl: '/admin/manage-opd-list',
+      },
+    });
+  }
+
+  
+  // editBooking(data: any) {
+  //   this.router.navigate(['/admin/manage-room-booking'], {
+  //     queryParams: {
+  //       id: data.RoomBookingId,
+  //       redUrl: '/admin/manage-room-booking-list',
+  //     },
+  //   });
+  // }
 
 }

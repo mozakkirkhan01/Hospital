@@ -78,13 +78,11 @@
                                         class="btn btn-sm btn btn-primary"  data-bs-toggle="modal" 
                                         data-bs-target="#viewOpdModal"
                                          (click)=" openViewModal(item)">
-                                        <!-- //(click)="openViewModal(item)" -->
                                         <i class="bi bi-eye-fill"></i>
                                     </button>
                                 </td>
-                                <td *ngIf="action.CanEdit">
-                                    <button class="btn btn-sm btn-warning">
-                                        <!-- (click)="editPatient(item)" -->
+                                <td class="text-center" *ngIf="action.CanEdit">
+                                    <button class="btn btn-sm btn-warning" (click)="EditOpd(item)">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </td>
@@ -256,14 +254,18 @@
                 <div class="text-muted small">OPD No</div>
                 <span class="badge bg-info">{{ViewOpd.OpdNo}}</span>
               </div>
-              <div class="col-md-3">
-                <div class="text-muted small">OPD Type</div>
-                <span class="badge bg-success">
-                  {{GetOpdTypeList(ViewOpd.OpdType)}}
-                </span>
+              <div class="col-md-2">
+                  <div class="text-muted small">OPD Type</div>
+                  <span class="badge bg-success">
+                      {{GetOpdTypeList(ViewOpd.OpdType)}}
+                    </span>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-muted small">Opd Date</div>
+                    <span class="badge bg-info">{{ViewOpd.OpdDate | date:'dd-MM-yyyy' }}</span>
+                    </div>
+                </div>
               </div>
-            </div>
-          </div>
         </div>
 
         <!-- SERVICE DETAILS -->
