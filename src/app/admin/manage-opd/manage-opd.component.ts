@@ -12,14 +12,11 @@ import {
   StaffLoginModel,
 } from '../../utils/interface';
 import {
-  Gender,
-  DocType,
   Status,
   BloodGroup,
   PaymentMode,
   PaymentType,
   OpdType,
-  // MaritalStatus,
 } from '../../utils/enum';
 import { request } from 'bwip-js';
 
@@ -46,18 +43,6 @@ export class ManageOpdComponent implements OnInit {
   OpdTypeList = this.loadDataService.GetEnumList(OpdType);
   BloodGroupList = this.loadDataService.GetEnumList(BloodGroup);
   userDetail: any = {};
-
-
-  // GenderList = this.loadDataService.GetEnumList(Gender);
-  // BloodGroupList = this.loadDataService.GetEnumList(BloodGroup);
-  // MaritalStatusList = this.loadDataService.GetEnumList(MaritalStatus);
-  // OpdTypeList = this.loadDataService.GetEnumList(DocType);
-  // AllStatusList = Status;
-  // AllGenderList = Gender;
-  // AllMaritalStatusList = MaritalStatus;
-  // AllBloodGroupList = BloodGroup;
-  // AllOpdTypeList = DocType;
-
   constructor(
     private service: AppService,
     private toastr: ToastrService,
@@ -322,11 +307,7 @@ loadOpdDetailForEdit(opdId: number) {
     }
     this.OpdPatient.PatientId = 0;
   }
-  // clearPatient() {
-  //   this.PatientList = this.AllPatientList;
-  //   this.OpdPatient.PatientId = null;
-  //   this.OpdPatient = {};
-  // }
+
   clearPatient() {
     this.OpdPatient.PatientName = '';
     this.OpdPatient.PatientId = null;
@@ -803,13 +784,3 @@ loadOpdDetailForEdit(opdId: number) {
   }
 
 }
-
-
-
-// resetForm() {
-//   this.OpdPatient = {};
-//   this.ServiceDetailList = [];
-//   this.PaymentDetailList = [];
-//   this.Payment = {};
-//   this.ServiceDetail = {};
-// };
