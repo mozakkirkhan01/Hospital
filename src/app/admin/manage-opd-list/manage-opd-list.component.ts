@@ -5,7 +5,7 @@ import { AppService } from '../../utils/app.service';
 import { ConstantData } from '../../utils/constant-data';
 import { LoadDataService } from '../../utils/load-data.service';
 import { LocalService } from '../../utils/local.service';
-import { Gender, DocType, Status, BloodGroup, PaymentStatus, BillStatus, PaymentMode, PaymentType, OpdType } from '../../utils/enum';
+import { PaymentStatus, BillStatus, PaymentMode, PaymentType, OpdType } from '../../utils/enum';
 import { ActionModel, RequestModel, StaffLoginModel } from '../../utils/interface';
 import { Router } from '@angular/router';
 
@@ -306,15 +306,5 @@ export class ManageOpdListComponent {
       },
     });
   }
-
-  
-  // editBooking(data: any) {
-  //   this.router.navigate(['/admin/manage-room-booking'], {
-  //     queryParams: {
-  //       id: data.RoomBookingId,
-  //       redUrl: '/admin/manage-room-booking-list',
-  //     },
-  //   });
-  // }
 
 }
