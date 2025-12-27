@@ -7,9 +7,6 @@
   margin-bottom: 10px;
   background: #fff;
 }
-
-
-
 /* Perfect centered legend with only text background */
 .patient-details legend {
   all: unset;
