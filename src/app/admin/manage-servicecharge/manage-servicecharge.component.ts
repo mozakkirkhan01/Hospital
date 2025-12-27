@@ -5,13 +5,7 @@ import { AppService } from '../../utils/app.service';
 import { ConstantData } from '../../utils/constant-data';
 import { LoadDataService } from '../../utils/load-data.service';
 import { LocalService } from '../../utils/local.service';
-import {
-  Gender,
-  DocType,
-  Status,
-  BloodGroup,
-  MaritalStatus,
-} from '../../utils/enum';
+import {Status} from '../../utils/enum';
 import {
   ActionModel,
   RequestModel,
@@ -209,7 +203,6 @@ export class ManageServicechargeComponent {
       }
     );
   }
-
  
     getServiceChargeList() {
     var obj: RequestModel = {
