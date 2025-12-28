@@ -77,7 +77,6 @@ export class ManageServicecategoryComponent {
     }))
   }
 
-
     @ViewChild('formservicecategory') formservicecategory: NgForm;
     saveServiceCategory() {
       this.isSubmitted = true;
