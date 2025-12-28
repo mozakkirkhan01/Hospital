@@ -128,8 +128,6 @@ export class ManageServiceSubcategoryComponent {
     }))
   }
 
-
-
     getservicecategoryList() {
     var obj: RequestModel = {
       request: this.localService.encrypt(JSON.stringify({ })).toString()
