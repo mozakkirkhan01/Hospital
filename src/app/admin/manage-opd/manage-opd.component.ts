@@ -147,36 +147,7 @@ validiateMenu() {
   @ViewChild('formOpdPatient') formOpdPatient: NgForm;
   @ViewChild('formService') formService: NgForm;
 
-// for editing the data of opd details
-  // loadOpdDetailForEdit(patientId: number){
-  //   const obj: RequestModel = {
-  //   request: this.localService.encrypt(JSON.stringify(patientId)).toString(),
-  // };
-  //   this.dataLoading = true;
-  //   this.service.getOpdDetailById(obj).subscribe(response: any) => {
-  //     if ( response.Message === 'Success') {
-  //       const patient = response.getOpdDetailById;
-  //     };
-  //     this.OpdPatient = response.PatientName;
-  //     //Patient details
-  //     this.OpdPatient.OpdDate = this.loadDataService.loadDateYMD(patient.OpdDate);
-  //     this.OpdPatient.OpdId = patient.OpdId;
-  //     this.OpdPatient.UHIDNO = patient.UHIDNO;
-  //     this.OpdPatient.PatientName = patient.PatientName;
-  //     this.OpdPatient.Age = patient.Age;
-  //     this.OpdPatient.MobileNo = patient.MobileNo;
-  //     this.OpdPatient.Address = patient.Address;
-  //     this.OpdPatient.AadharNo = patient.AadharNo;
-  //     this.OpdPatient.BloodGroup = patient.BloodGroup;
-  //     this.OpdPatient.OpdType = patient.OpdType;
 
-  //     //Service Details
-  //     this.getservicecategoryList();
-  //     this.getserviceSubcategoryList();
-  //     this.getServiceChargeList();
-  //   }
-
-  // }
 loadOpdDetailForEdit(opdId: number) {
 
   const obj: RequestModel = {

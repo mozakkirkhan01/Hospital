@@ -254,6 +254,8 @@ export class ManageOpdListComponent {
   //   this.getBookingDetails(item.RoomBookingId);
   // }
 
+  // for viewing details of a pateint
+
   openViewModal(item: any) {
 
     this.ViewOpd = {
