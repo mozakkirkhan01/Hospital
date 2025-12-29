@@ -700,7 +700,7 @@
     background: linear-gradient(180deg, #210cd1, transparent);
   } */
   .login-background {
-    background-image: url(assets/img/cake.webp);
+    background-image: url(assets/img/hospital-background.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
