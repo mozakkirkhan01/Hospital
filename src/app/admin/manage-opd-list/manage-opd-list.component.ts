@@ -280,7 +280,9 @@ export class ManageOpdListComponent {
 
     this.service.OpdDetailList(obj).subscribe((res: any) => {
       if (res.Message === ConstantData.SuccessMessage) {
-        this.ViewOpd.Services = (res.OpdDetailList || []).filter((x: any) => x.OpdId === item.OpdId);
+        this.ViewOpd.Services = (res.OpdDetailList);
+        // if whole data is coming from backend then this use below filter to filter it other wise above code is optimeze7
+        // this.ViewOpd.Services = (res.OpdDetailList || []).filter((x: any) => x.OpdId === item.OpdId);
       }
     });
     console.log(this.ViewOpd);
