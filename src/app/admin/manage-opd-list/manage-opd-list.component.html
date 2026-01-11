@@ -287,7 +287,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let s of ViewOpd.Services; let i=index">
+                <tr *ngFor="let s of ServiceDetailList; let i=index">
                   <td>{{i+1}}</td>
                   <td>{{s.ServiceCategoryName}}</td>
                   <td>{{s.ServiceSubCategoryName}}</td>
@@ -319,7 +319,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let p of ViewOpd.Services; let i=index">
+                <tr *ngFor="let p of PaymentDetailList; let i=index">
                   <td>{{i+1}}</td>
                   <td class="fw-semibold">₹ {{p.Amount}}</td>
                   <td>{{getPaymentModeName(p.PaymentMode)}}</td>
