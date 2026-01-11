@@ -255,8 +255,10 @@ export class ManageOpdListComponent {
   // }
 
   // for viewing details of a pateint
-
+  ServiceDetailList: any[] = [];
+  PaymentDetailList: any[] = [];
   openViewModal(item: any) {
+    console.log("yes");
 
     this.ViewOpd = {
       OpdId: item.OpdId,
@@ -270,22 +272,41 @@ export class ManageOpdListComponent {
 
     };
 
-    // 🔹 Call API to get full details
-    const obj: RequestModel = {
-      request: this.localService.encrypt(
-        JSON.stringify({ OpdId: item.OpdId })).toString()
-    };
+    var opdId = item.OpdId;
+ 
+    
+  
+   const obj: RequestModel = {
+    request: this.localService.encrypt(opdId.toString())
+  };
+
+  this.dataLoading = true;
+
+  this.service.getOpdDetailById(obj).subscribe({
+    next: (res: any) => {
+
+      if (res?.Message === ConstantData.SuccessMessage) {
+
+        console.log(res);
+
+        this.ViewOpd = res.Opd ?? {};
+        this.ServiceDetailList = res.OpdDetailList ?? [];
+        this.PaymentDetailList = res.PaymentList ?? [];
 
 
-
-    this.service.OpdDetailList(obj).subscribe((res: any) => {
-      if (res.Message === ConstantData.SuccessMessage) {
-        this.ViewOpd.Services = (res.OpdDetailList);
-        // if whole data is coming from backend then this use below filter to filter it other wise above code is optimeze7
-        // this.ViewOpd.Services = (res.OpdDetailList || []).filter((x: any) => x.OpdId === item.OpdId);
+      } else {
+        this.toastr.warning(res?.Message || 'Failed to load OPD');
       }
-    });
-    console.log(this.ViewOpd);
+
+      this.dataLoading = false;
+    },
+
+    error: (err) => {
+      console.error(err);
+      this.toastr.error('Error loading OPD');
+      this.dataLoading = false;
+    }
+  });
   }
 
 
