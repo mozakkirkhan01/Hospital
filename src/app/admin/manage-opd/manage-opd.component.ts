@@ -63,7 +63,7 @@ export class ManageOpdComponent implements OnInit {
       // validate menu with clead URl ( wihtout query params)
       this.validiateMenu();
 
-      if(this.OpdPatient.OpdId > 0){
+      if (this.OpdPatient.OpdId > 0) {
         this.loadOpdDetailForEdit(this.OpdPatient.OpdId);
         return;
       }
@@ -113,116 +113,78 @@ export class ManageOpdComponent implements OnInit {
   //     }
   //   );
   // }
-validiateMenu() {
-  const cleanUrl = this.router.url.split('?')[0]; // ✅ VERY IMPORTANT
+  validiateMenu() {
+    const cleanUrl = this.router.url.split('?')[0]; // ✅ VERY IMPORTANT
 
-  const obj: RequestModel = {
-    request: this.localService.encrypt(
-      JSON.stringify({
-        Url: cleanUrl,
-        StaffLoginId: this.StaffLogin.StaffLoginId,
-      })
-    ).toString(),
-  };
+    const obj: RequestModel = {
+      request: this.localService.encrypt(
+        JSON.stringify({
+          Url: cleanUrl,
+          StaffLoginId: this.StaffLogin.StaffLoginId,
+        })
+      ).toString(),
+    };
 
-  this.dataLoading = true;
+    this.dataLoading = true;
 
-  this.service.validiateMenu(obj).subscribe(
-    (response: any) => {
-      this.action = this.loadDataService.validiateMenu(
-        response,
-        this.toastr,
-        this.router
-      );
-      this.dataLoading = false;
-      this.action.ResponseReceived = true;
-    },
-    () => {
-      this.toastr.error('Error while validating menu');
-      this.dataLoading = false;
-    }
-  );
-}
+    this.service.validiateMenu(obj).subscribe(
+      (response: any) => {
+        this.action = this.loadDataService.validiateMenu(
+          response,
+          this.toastr,
+          this.router
+        );
+        this.dataLoading = false;
+        this.action.ResponseReceived = true;
+      },
+      () => {
+        this.toastr.error('Error while validating menu');
+        this.dataLoading = false;
+      }
+    );
+  }
 
   @ViewChild('formOpdPatient') formOpdPatient: NgForm;
   @ViewChild('formService') formService: NgForm;
 
 
-loadOpdDetailForEdit(opdId: number) {
+loadOpdDetailForEdit(opdId: number): void {
 
   const obj: RequestModel = {
-    request: this.localService.encrypt(JSON.stringify(opdId)).toString()
+    request: this.localService.encrypt(opdId.toString())
   };
 
   this.dataLoading = true;
 
-  this.service.getOpdDetailById(obj).subscribe((res: any) => {
+  this.service.getOpdDetailById(obj).subscribe({
+    next: (res: any) => {
 
-    if (res.Message !== ConstantData.SuccessMessage) {
-      this.toastr.error(res.Message);
+      if (res?.Message === ConstantData.SuccessMessage) {
+
+        console.log(res);
+
+        this.OpdPatient = res.Opd ?? {};
+        this.OpdPatient.PatientNameauto =this.OpdPatient.PatientName;
+        this.ServiceDetailList = res.OpdDetailList ?? [];
+        this.PaymentDetailList = res.PaymentList ?? [];
+
+        this.calculateTotals();
+
+      } else {
+        this.toastr.warning(res?.Message || 'Failed to load OPD');
+      }
+
       this.dataLoading = false;
-      return;
+    },
+
+    error: (err) => {
+      console.error(err);
+      this.toastr.error('Error loading OPD');
+      this.dataLoading = false;
     }
-
-    const opd = res.Opd;
-    console.log(opd);
-    
-
-    /* ================= OPD + PATIENT ================= */
-    this.OpdPatient = {
-      OpdId: opd.OpdId,
-      PatientId: opd.PatientId,
-      PatientName: opd.PatientName,
-      UHIDNo: opd.UHIDNo,
-      MobileNo: opd.MobileNo,
-      Age: opd.Age,
-      Address: opd.Address,
-      BloodGroup: opd.BloodGroup,
-      OpdType: opd.OpdType,
-      OpdDate: this.loadDataService.loadDateYMD(opd.OpdDate),
-      LineTotal: opd.LineTotal,
-      TotalDiscount: opd.TotalDiscount,
-      GrandTotal: opd.GrandTotal,
-      TotalPaidAmount: opd.TotalPaidAmount,
-      TotalDuesAmount: opd.TotalDuesAmount,
-      PaymentStatus: opd.PaymentStatus,
-      BillStatus: opd.BillStatus,
-      Remarks: opd.Remarks
-    };
-
-    /* ================= SERVICES ================= */
-    this.ServiceDetailList = res.Services.map((s: any) => ({
-      OpdDetailId: s.OpdDetailId,
-      ServiceCategoryId: s.ServiceCategoryId,
-      ServiceCategoryName: s.ServiceCategoryName,
-      ServiceSubCategoryId: s.ServiceSubCategoryId,
-      ServiceSubCategoryName: s.ServiceSubCategoryName,
-      ServiceChargeAmount: s.ServiceChargeAmount,
-      Quantity: s.Quantity,
-      Discount: s.Discount,
-      Total: s.Total
-    }));
-
-    /* ================= PAYMENTS ================= */
-    this.PaymentDetailList = res.Payments.map((p: any) => ({
-      PaymentId: p.PaymentId,
-      Amount: p.Amount,
-      PaymentMode: p.PaymentMode,
-      PaymentType: p.PaymentType,
-      PaymentDate: new Date(p.PaymentDate)
-    }));
-
-    /* ================= CALCULATE TOTALS ================= */
-    this.calculateTotals();
-
-    this.dataLoading = false;
-  },
-  err => {
-    console.error(err);
-    this.toastr.error('Error loading OPD');
-    this.dataLoading = false;
   });
 }
+
 
 
   resetOpdPatientForm() {
@@ -238,7 +200,7 @@ loadOpdDetailForEdit(opdId: number) {
   AllPatientList: any[] = [];
   PatientList: any[] = [];
 
-  getPatientList() {  
+  getPatientList() {
     var obj: RequestModel = {
       request: this.localService
         .encrypt(JSON.stringify({ Status: Status.Active }))

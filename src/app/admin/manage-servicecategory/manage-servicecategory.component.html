@@ -103,11 +103,11 @@
 
                                 <mat-form-field appearance="outline" class="col-sm-12 form-group">
                                     <mat-label>Service Category Name</mat-label>
-                                    <input matInput #servicecategoryName="ngModel" name="servicecategoryName" [(ngModel)]="servicecategory.servicecategoryName"
+                                    <input matInput #ServiceCategoryName="ngModel" name="ServiceCategoryName" [(ngModel)]="servicecategory.ServiceCategoryName"
                                         required autofocus>
 
                                     <mat-error
-                                        *ngIf="(servicecategoryName.dirty  || servicecategoryName.touched) || (servicecategoryName.invalid && isSubmitted)">
+                                        *ngIf="(ServiceCategoryName.dirty  || ServiceCategoryName.touched) || (ServiceCategoryName.invalid && isSubmitted)">
                                         servicecategory name is <strong>required</strong>
                                     </mat-error>
                                 </mat-form-field>

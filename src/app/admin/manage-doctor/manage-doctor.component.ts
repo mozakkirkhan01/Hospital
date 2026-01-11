@@ -190,7 +190,7 @@ export class ManageDoctorComponent {
 
 
     editDoctor(obj: any) {
-    this.resetForm()
+    this.resetForm();
     this.Doctor = obj;
     this.Doctor.JoinDate = new Date(obj.JoinDate);
     if (this.Doctor.DateOofBirth)

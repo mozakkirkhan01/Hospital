@@ -185,11 +185,8 @@ export class ManageServicecategoryComponent {
 
 
     editservicecategory(obj: any) {
-    this.resetForm()
+    // this.resetForm()
     this.servicecategory = obj;
-    this.servicecategory.JoinDate = new Date(obj.JoinDate);
-    if (this.servicecategory.DateOofBirth)
-      this.servicecategory.DateOfBirth = new Date(obj.DateOfBirth);
   }
 
 }
