@@ -194,10 +194,13 @@ export class ManageServiceSubcategoryComponent {
     }
 
 
-    editserviceSubcategory(obj: any) {
-    this.resetForm()
-    this.serviceSubcategory = obj;
-  }
+  //   editserviceSubcategory(obj: any) {
+  //   this.serviceSubcategory = obj;
+
+  // }
+editserviceSubcategory(obj: any) {
+  this.serviceSubcategory = { ...obj };
+}
 
 
 }

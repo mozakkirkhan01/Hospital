@@ -123,7 +123,7 @@
 
                                 <mat-form-field appearance="outline" class="col-sm- form-group">
                                     <mat-label>Service Sub-category Name</mat-label>
-                                    <input matInput #serviceSubcategoryName="ngModel" name="serviceSubcategoryName" [(ngModel)]="serviceSubcategory.serviceSubcategoryName"
+                                    <input matInput #serviceSubcategoryName="ngModel" name="ServiceSubCategoryId" [(ngModel)]="serviceSubcategory.ServiceSubCategoryName"
                                         required autofocus>
                                     <mat-error
                                         *ngIf="(serviceSubcategoryName.dirty  || serviceSubcategoryName.touched) || (serviceSubcategoryName.invalid && isSubmitted)">

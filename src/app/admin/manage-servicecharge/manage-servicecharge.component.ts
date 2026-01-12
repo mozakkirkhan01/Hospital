@@ -250,10 +250,22 @@ export class ManageServicechargeComponent {
     }
   }
 
-  editservicecharge(obj: any) {
-    this.resetForm();
-    this.servicecharge = obj;
-  }
+  // editservicecharge(obj: any) {
+  //   // this.resetForm();
+  //   this.servicecharge = obj;
+  //   console.log(this.servicecharge);
+    
+  // }
+editservicecharge(obj: any) {
+  this.servicecharge = { ...obj }; // clone object (important)
+
+  // 🔥 FIX: load subcategories for selected category
+  const selectedId = Number(this.servicecharge.ServiceCategoryId);
+
+  this.serviceSubcategoryList = this.AllserviceSubcategoryList.filter(
+    x => Number(x.ServiceCategoryId) === selectedId
+  );
+}
 
 
 
